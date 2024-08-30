@@ -4,111 +4,96 @@ import 'package:logging/logging.dart';
 
 import '../model/db/member.dart';
 import '../services/isar_service.dart';
-import '../utils/usecase/try_method.dart';
+import '../utils/usecase/execute_and_log.dart';
 
 Logger log = Logger('main.repository.member');
 
+/// Repository for managing [Member] entities in the Isar database.
 class MemberRepository {
+  /// Isar collection for accessing [Member] entities.
   late IsarCollection<Member> members;
 
   late Isar _isar;
 
+  /// Initializes the repository by obtaining a reference to the [Isar] instance
+  /// and the [members] collection.
   MemberRepository init() {
-    try {
-      log.info('member repository init started...');
+    log.info('Initializing MemberRepository...');
 
+    try {
       _isar = Get.find<IsarService>().isar;
       members = _isar.members;
 
-      log.info('member repository init completed');
-      return this;
+      log.info('MemberRepository initialized.');
     } catch (e) {
-      log.severe('Failed to initialize member repository', [e]);
+      log.severe('Failed to initialize MemberRepository: $e', [e]);
       rethrow;
     }
+
+    return this;
   }
 
-  /// Inserts/updates a member
-  Future<Id> insertmember(Member data) async {
-    return tryMethod<Id>(
-      method: () async {
-        late Id id;
-        await _isar.writeTxn(() async {
-          id = await members.put(data);
-        });
-        return id;
-      },
-      log: log,
-      message: 'Insert member',
+  /// Inserts or updates a [Member] entity.
+  Future<Id> insertMember(Member member) async {
+    return executeAndLog<Id>(
+      method: () => _isar.writeTxn(() => members.put(member)),
+      logger: log,
+      taskDescription: 'Insert member',
+      extraMessageBuilder: (id) =>
+          'Inserted member with ID: $id, Name: ${member.name}, Last Name: ${member.lastName}',
     );
   }
 
-  /// Inserts/updates list of members
-  Future<List<Id>> insertmembers(List<Member> data) async {
-    return tryMethod<List<Id>>(
-      method: () async {
-        List<Id> ids = <Id>[];
-        await _isar.writeTxn(() async {
-          ids.addAll(await members.putAll(data));
-        });
-        return ids;
-      },
-      log: log,
-      message: 'Insert members',
-      extraMessage: '==> ${data.length} out of ${data.length} was successful',
+  /// Inserts or updates a list of [Member] entities.
+  Future<List<Id>> insertMembers(List<Member> members) async {
+    return executeAndLog<List<Id>>(
+      method: () => _isar.writeTxn(() => this.members.putAll(members)),
+      logger: log,
+      taskDescription: 'Insert members',
+      extraMessageBuilder: (ids) =>
+          'Inserted ${ids.length} out of ${members.length} members successfully.',
     );
   }
 
-  /// Deletes a member
-  Future<bool> deletemember(Id id) async {
-    return tryMethod<bool>(
-      method: () async {
-        bool success = false;
-        await _isar.writeTxn(() async {
-          success = await members.delete(id);
-        });
-        return success;
-      },
-      log: log,
-      message: 'Delete member (id: $id)',
+  /// Deletes a [Member] entity by its ID.
+  Future<bool> deleteMember(Id id) async {
+    return executeAndLog<bool>(
+      method: () => _isar.writeTxn(() => members.delete(id)),
+      logger: log,
+      taskDescription: 'Delete member',
+      extraMessageBuilder: (success) => success
+          ? 'Member with ID: $id deleted successfully.'
+          : 'Failed to delete member with ID: $id.',
     );
   }
 
-  /// Deletes members
-  Future<int> deletemembers(List<Id> ids) async {
-    return tryMethod<int>(
-      method: () async {
-        int count = 0;
-        await _isar.writeTxn(() async {
-          count = await members.deleteAll(ids);
-        });
-        return count;
-      },
-      log: log,
-      message: 'Delete members',
-      extraMessage: '==> ${ids.length} out of ${ids.length} was successful',
+  /// Deletes multiple [Member] entities by their IDs.
+  Future<int> deleteMembers(List<Id> ids) async {
+    return executeAndLog<int>(
+      method: () => _isar.writeTxn(() => members.deleteAll(ids)),
+      logger: log,
+      taskDescription: 'Delete members',
+      extraMessageBuilder: (count) =>
+          'Deleted $count out of ${ids.length} members successfully.',
     );
   }
 
-  /// Finds member by id
-  Future<Member?> findmemberById(Id id) async {
-    return tryMethod<Member?>(
-      method: () async {
-        return await members.get(id);
-      },
-      log: log,
-      message: 'Find member by id',
+  /// Finds a [Member] entity by its ID.
+  Future<Member?> findMemberById(Id id) async {
+    return executeAndLog<Member?>(
+      method: () => members.get(id),
+      logger: log,
+      taskDescription: 'Find member by ID',
     );
   }
 
-  /// Gets all members
-  Future<List<Member>> getAllmembers() async {
-    return tryMethod<List<Member>>(
-      method: () async {
-        return await members.where().findAll();
-      },
-      log: log,
-      message: 'get all members',
+  /// Retrieves all [Member] entities from the database.
+  Future<List<Member>> getAllMembers() async {
+    return executeAndLog<List<Member>>(
+      method: () => members.where().findAll(),
+      logger: log,
+      taskDescription: 'Get all members',
+      extraMessageBuilder: (members) => 'Retrieved ${members.length} members.',
     );
   }
 }

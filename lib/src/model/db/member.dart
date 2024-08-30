@@ -5,15 +5,26 @@ import 'loan.dart';
 
 part 'member.g.dart';
 
-@Collection()
+/// Represents a member in the application.
+@collection
 class Member {
+  /// Unique identifier for the member.
   Id id = Isar.autoIncrement;
+
+  /// First name of the member.
   String? name;
+
+  /// Last name of the member.
   String? lastName;
+
+  /// Phone number of the member.
   String? phoneNumber;
 
+  /// Loans taken by this member.
   @Backlink(to: 'member')
-  final loan = IsarLinks<Loan>();
+  final loans = IsarLinks<Loan>();
+
+  /// Groups to which this member belongs.
   @Backlink(to: 'member')
-  final group = IsarLinks<Group>();
+  final groups = IsarLinks<Group>();
 }

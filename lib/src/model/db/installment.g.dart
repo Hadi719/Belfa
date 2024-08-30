@@ -32,15 +32,15 @@ const InstallmentSchema = CollectionSchema(
       name: r'dueDate',
       type: IsarType.dateTime,
     ),
-    r'isPaid': PropertySchema(
+    r'installmentNumber': PropertySchema(
       id: 3,
+      name: r'installmentNumber',
+      type: IsarType.long,
+    ),
+    r'isPaid': PropertySchema(
+      id: 4,
       name: r'isPaid',
       type: IsarType.bool,
-    ),
-    r'number': PropertySchema(
-      id: 4,
-      name: r'number',
-      type: IsarType.long,
     ),
     r'paidDate': PropertySchema(
       id: 5,
@@ -56,11 +56,11 @@ const InstallmentSchema = CollectionSchema(
   indexes: {},
   links: {
     r'loan': LinkSchema(
-      id: -7414011619717774253,
+      id: 4827058560491420993,
       name: r'loan',
       target: r'Loan',
       single: true,
-      linkName: r'installment',
+      linkName: r'installments',
     )
   },
   embeddedSchemas: {},
@@ -88,8 +88,8 @@ void _installmentSerialize(
   writer.writeDouble(offsets[0], object.amountDue);
   writer.writeDouble(offsets[1], object.amountPaid);
   writer.writeDateTime(offsets[2], object.dueDate);
-  writer.writeBool(offsets[3], object.isPaid);
-  writer.writeLong(offsets[4], object.number);
+  writer.writeLong(offsets[3], object.installmentNumber);
+  writer.writeBool(offsets[4], object.isPaid);
   writer.writeDateTime(offsets[5], object.paidDate);
 }
 
@@ -104,8 +104,8 @@ Installment _installmentDeserialize(
   object.amountPaid = reader.readDoubleOrNull(offsets[1]);
   object.dueDate = reader.readDateTimeOrNull(offsets[2]);
   object.id = id;
-  object.isPaid = reader.readBoolOrNull(offsets[3]);
-  object.number = reader.readLongOrNull(offsets[4]);
+  object.installmentNumber = reader.readLongOrNull(offsets[3]);
+  object.isPaid = reader.readBool(offsets[4]);
   object.paidDate = reader.readDateTimeOrNull(offsets[5]);
   return object;
 }
@@ -124,9 +124,9 @@ P _installmentDeserializeProp<P>(
     case 2:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 4:
       return (reader.readLongOrNull(offset)) as P;
+    case 4:
+      return (reader.readBool(offset)) as P;
     case 5:
       return (reader.readDateTimeOrNull(offset)) as P;
     default:
@@ -521,88 +521,64 @@ extension InstallmentQueryFilter
     });
   }
 
-  QueryBuilder<Installment, Installment, QAfterFilterCondition> isPaidIsNull() {
+  QueryBuilder<Installment, Installment, QAfterFilterCondition>
+      installmentNumberIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'isPaid',
+        property: r'installmentNumber',
       ));
     });
   }
 
   QueryBuilder<Installment, Installment, QAfterFilterCondition>
-      isPaidIsNotNull() {
+      installmentNumberIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'isPaid',
-      ));
-    });
-  }
-
-  QueryBuilder<Installment, Installment, QAfterFilterCondition> isPaidEqualTo(
-      bool? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isPaid',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Installment, Installment, QAfterFilterCondition> numberIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'number',
+        property: r'installmentNumber',
       ));
     });
   }
 
   QueryBuilder<Installment, Installment, QAfterFilterCondition>
-      numberIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'number',
-      ));
-    });
-  }
-
-  QueryBuilder<Installment, Installment, QAfterFilterCondition> numberEqualTo(
-      int? value) {
+      installmentNumberEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'number',
+        property: r'installmentNumber',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Installment, Installment, QAfterFilterCondition>
-      numberGreaterThan(
+      installmentNumberGreaterThan(
     int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'number',
+        property: r'installmentNumber',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Installment, Installment, QAfterFilterCondition> numberLessThan(
+  QueryBuilder<Installment, Installment, QAfterFilterCondition>
+      installmentNumberLessThan(
     int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'number',
+        property: r'installmentNumber',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Installment, Installment, QAfterFilterCondition> numberBetween(
+  QueryBuilder<Installment, Installment, QAfterFilterCondition>
+      installmentNumberBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -610,11 +586,21 @@ extension InstallmentQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'number',
+        property: r'installmentNumber',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Installment, Installment, QAfterFilterCondition> isPaidEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isPaid',
+        value: value,
       ));
     });
   }
@@ -750,6 +736,20 @@ extension InstallmentQuerySortBy
     });
   }
 
+  QueryBuilder<Installment, Installment, QAfterSortBy>
+      sortByInstallmentNumber() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'installmentNumber', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Installment, Installment, QAfterSortBy>
+      sortByInstallmentNumberDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'installmentNumber', Sort.desc);
+    });
+  }
+
   QueryBuilder<Installment, Installment, QAfterSortBy> sortByIsPaid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPaid', Sort.asc);
@@ -759,18 +759,6 @@ extension InstallmentQuerySortBy
   QueryBuilder<Installment, Installment, QAfterSortBy> sortByIsPaidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPaid', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Installment, Installment, QAfterSortBy> sortByNumber() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'number', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Installment, Installment, QAfterSortBy> sortByNumberDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'number', Sort.desc);
     });
   }
 
@@ -837,6 +825,20 @@ extension InstallmentQuerySortThenBy
     });
   }
 
+  QueryBuilder<Installment, Installment, QAfterSortBy>
+      thenByInstallmentNumber() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'installmentNumber', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Installment, Installment, QAfterSortBy>
+      thenByInstallmentNumberDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'installmentNumber', Sort.desc);
+    });
+  }
+
   QueryBuilder<Installment, Installment, QAfterSortBy> thenByIsPaid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPaid', Sort.asc);
@@ -846,18 +848,6 @@ extension InstallmentQuerySortThenBy
   QueryBuilder<Installment, Installment, QAfterSortBy> thenByIsPaidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPaid', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Installment, Installment, QAfterSortBy> thenByNumber() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'number', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Installment, Installment, QAfterSortBy> thenByNumberDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'number', Sort.desc);
     });
   }
 
@@ -894,15 +884,16 @@ extension InstallmentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Installment, Installment, QDistinct> distinctByIsPaid() {
+  QueryBuilder<Installment, Installment, QDistinct>
+      distinctByInstallmentNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isPaid');
+      return query.addDistinctBy(r'installmentNumber');
     });
   }
 
-  QueryBuilder<Installment, Installment, QDistinct> distinctByNumber() {
+  QueryBuilder<Installment, Installment, QDistinct> distinctByIsPaid() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'number');
+      return query.addDistinctBy(r'isPaid');
     });
   }
 
@@ -939,15 +930,16 @@ extension InstallmentQueryProperty
     });
   }
 
-  QueryBuilder<Installment, bool?, QQueryOperations> isPaidProperty() {
+  QueryBuilder<Installment, int?, QQueryOperations>
+      installmentNumberProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isPaid');
+      return query.addPropertyName(r'installmentNumber');
     });
   }
 
-  QueryBuilder<Installment, int?, QQueryOperations> numberProperty() {
+  QueryBuilder<Installment, bool, QQueryOperations> isPaidProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'number');
+      return query.addPropertyName(r'isPaid');
     });
   }
 

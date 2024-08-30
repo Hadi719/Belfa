@@ -37,11 +37,11 @@ const LoanSchema = CollectionSchema(
       name: r'loanDuration',
       type: IsarType.long,
     ),
-    r'loanFrequency': PropertySchema(
+    r'loanRepaymentFrequency': PropertySchema(
       id: 4,
-      name: r'loanFrequency',
+      name: r'loanRepaymentFrequency',
       type: IsarType.byte,
-      enumMap: _LoanloanFrequencyEnumValueMap,
+      enumMap: _LoanloanRepaymentFrequencyEnumValueMap,
     ),
     r'loanStatus': PropertySchema(
       id: 5,
@@ -74,9 +74,9 @@ const LoanSchema = CollectionSchema(
       target: r'Group',
       single: true,
     ),
-    r'installment': LinkSchema(
-      id: 350143696727571678,
-      name: r'installment',
+    r'installments': LinkSchema(
+      id: 6394918654324366935,
+      name: r'installments',
       target: r'Installment',
       single: false,
     )
@@ -107,7 +107,7 @@ void _loanSerialize(
   writer.writeDouble(offsets[1], object.interestRate);
   writer.writeDateTime(offsets[2], object.loanDate);
   writer.writeLong(offsets[3], object.loanDuration);
-  writer.writeByte(offsets[4], object.loanFrequency.index);
+  writer.writeByte(offsets[4], object.loanRepaymentFrequency.index);
   writer.writeByte(offsets[5], object.loanStatus.index);
   writer.writeDouble(offsets[6], object.principalAmount);
 }
@@ -124,9 +124,9 @@ Loan _loanDeserialize(
   object.interestRate = reader.readDoubleOrNull(offsets[1]);
   object.loanDate = reader.readDateTimeOrNull(offsets[2]);
   object.loanDuration = reader.readLongOrNull(offsets[3]);
-  object.loanFrequency =
-      _LoanloanFrequencyValueEnumMap[reader.readByteOrNull(offsets[4])] ??
-          LoanFrequency.weekly;
+  object.loanRepaymentFrequency = _LoanloanRepaymentFrequencyValueEnumMap[
+          reader.readByteOrNull(offsets[4])] ??
+      LoanRepaymentFrequency.weekly;
   object.loanStatus =
       _LoanloanStatusValueEnumMap[reader.readByteOrNull(offsets[5])] ??
           LoanStatus.active;
@@ -150,8 +150,9 @@ P _loanDeserializeProp<P>(
     case 3:
       return (reader.readLongOrNull(offset)) as P;
     case 4:
-      return (_LoanloanFrequencyValueEnumMap[reader.readByteOrNull(offset)] ??
-          LoanFrequency.weekly) as P;
+      return (_LoanloanRepaymentFrequencyValueEnumMap[
+              reader.readByteOrNull(offset)] ??
+          LoanRepaymentFrequency.weekly) as P;
     case 5:
       return (_LoanloanStatusValueEnumMap[reader.readByteOrNull(offset)] ??
           LoanStatus.active) as P;
@@ -162,7 +163,7 @@ P _loanDeserializeProp<P>(
   }
 }
 
-const _LoanloanFrequencyEnumValueMap = {
+const _LoanloanRepaymentFrequencyEnumValueMap = {
   'weekly': 0,
   'biweekly': 1,
   'monthly': 2,
@@ -170,13 +171,13 @@ const _LoanloanFrequencyEnumValueMap = {
   'semiAnnually': 4,
   'annually': 5,
 };
-const _LoanloanFrequencyValueEnumMap = {
-  0: LoanFrequency.weekly,
-  1: LoanFrequency.biweekly,
-  2: LoanFrequency.monthly,
-  3: LoanFrequency.quarterly,
-  4: LoanFrequency.semiAnnually,
-  5: LoanFrequency.annually,
+const _LoanloanRepaymentFrequencyValueEnumMap = {
+  0: LoanRepaymentFrequency.weekly,
+  1: LoanRepaymentFrequency.biweekly,
+  2: LoanRepaymentFrequency.monthly,
+  3: LoanRepaymentFrequency.quarterly,
+  4: LoanRepaymentFrequency.semiAnnually,
+  5: LoanRepaymentFrequency.annually,
 };
 const _LoanloanStatusEnumValueMap = {
   'active': 0,
@@ -194,15 +195,15 @@ Id _loanGetId(Loan object) {
 }
 
 List<IsarLinkBase<dynamic>> _loanGetLinks(Loan object) {
-  return [object.member, object.group, object.installment];
+  return [object.member, object.group, object.installments];
 }
 
 void _loanAttach(IsarCollection<dynamic> col, Id id, Loan object) {
   object.id = id;
   object.member.attach(col, col.isar.collection<Member>(), r'member', id);
   object.group.attach(col, col.isar.collection<Group>(), r'group', id);
-  object.installment
-      .attach(col, col.isar.collection<Installment>(), r'installment', id);
+  object.installments
+      .attach(col, col.isar.collection<Installment>(), r'installments', id);
 }
 
 extension LoanQueryWhereSort on QueryBuilder<Loan, Loan, QWhere> {
@@ -618,51 +619,53 @@ extension LoanQueryFilter on QueryBuilder<Loan, Loan, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> loanFrequencyEqualTo(
-      LoanFrequency value) {
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> loanRepaymentFrequencyEqualTo(
+      LoanRepaymentFrequency value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'loanFrequency',
+        property: r'loanRepaymentFrequency',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> loanFrequencyGreaterThan(
-    LoanFrequency value, {
+  QueryBuilder<Loan, Loan, QAfterFilterCondition>
+      loanRepaymentFrequencyGreaterThan(
+    LoanRepaymentFrequency value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'loanFrequency',
+        property: r'loanRepaymentFrequency',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> loanFrequencyLessThan(
-    LoanFrequency value, {
+  QueryBuilder<Loan, Loan, QAfterFilterCondition>
+      loanRepaymentFrequencyLessThan(
+    LoanRepaymentFrequency value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'loanFrequency',
+        property: r'loanRepaymentFrequency',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> loanFrequencyBetween(
-    LoanFrequency lower,
-    LoanFrequency upper, {
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> loanRepaymentFrequencyBetween(
+    LoanRepaymentFrequency lower,
+    LoanRepaymentFrequency upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'loanFrequency',
+        property: r'loanRepaymentFrequency',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -831,51 +834,51 @@ extension LoanQueryLinks on QueryBuilder<Loan, Loan, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> installment(
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> installments(
       FilterQuery<Installment> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'installment');
+      return query.link(q, r'installments');
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentLengthEqualTo(
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentsLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'installment', length, true, length, true);
+      return query.linkLength(r'installments', length, true, length, true);
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentIsEmpty() {
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'installment', 0, true, 0, true);
+      return query.linkLength(r'installments', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentIsNotEmpty() {
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'installment', 0, false, 999999, true);
+      return query.linkLength(r'installments', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentLengthLessThan(
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'installment', 0, true, length, include);
+      return query.linkLength(r'installments', 0, true, length, include);
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentLengthGreaterThan(
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'installment', length, include, 999999, true);
+      return query.linkLength(r'installments', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentLengthBetween(
+  QueryBuilder<Loan, Loan, QAfterFilterCondition> installmentsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -883,7 +886,7 @@ extension LoanQueryLinks on QueryBuilder<Loan, Loan, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'installment', lower, includeLower, upper, includeUpper);
+          r'installments', lower, includeLower, upper, includeUpper);
     });
   }
 }
@@ -937,15 +940,15 @@ extension LoanQuerySortBy on QueryBuilder<Loan, Loan, QSortBy> {
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterSortBy> sortByLoanFrequency() {
+  QueryBuilder<Loan, Loan, QAfterSortBy> sortByLoanRepaymentFrequency() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'loanFrequency', Sort.asc);
+      return query.addSortBy(r'loanRepaymentFrequency', Sort.asc);
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterSortBy> sortByLoanFrequencyDesc() {
+  QueryBuilder<Loan, Loan, QAfterSortBy> sortByLoanRepaymentFrequencyDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'loanFrequency', Sort.desc);
+      return query.addSortBy(r'loanRepaymentFrequency', Sort.desc);
     });
   }
 
@@ -1035,15 +1038,15 @@ extension LoanQuerySortThenBy on QueryBuilder<Loan, Loan, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterSortBy> thenByLoanFrequency() {
+  QueryBuilder<Loan, Loan, QAfterSortBy> thenByLoanRepaymentFrequency() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'loanFrequency', Sort.asc);
+      return query.addSortBy(r'loanRepaymentFrequency', Sort.asc);
     });
   }
 
-  QueryBuilder<Loan, Loan, QAfterSortBy> thenByLoanFrequencyDesc() {
+  QueryBuilder<Loan, Loan, QAfterSortBy> thenByLoanRepaymentFrequencyDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'loanFrequency', Sort.desc);
+      return query.addSortBy(r'loanRepaymentFrequency', Sort.desc);
     });
   }
 
@@ -1097,9 +1100,9 @@ extension LoanQueryWhereDistinct on QueryBuilder<Loan, Loan, QDistinct> {
     });
   }
 
-  QueryBuilder<Loan, Loan, QDistinct> distinctByLoanFrequency() {
+  QueryBuilder<Loan, Loan, QDistinct> distinctByLoanRepaymentFrequency() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'loanFrequency');
+      return query.addDistinctBy(r'loanRepaymentFrequency');
     });
   }
 
@@ -1147,9 +1150,10 @@ extension LoanQueryProperty on QueryBuilder<Loan, Loan, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Loan, LoanFrequency, QQueryOperations> loanFrequencyProperty() {
+  QueryBuilder<Loan, LoanRepaymentFrequency, QQueryOperations>
+      loanRepaymentFrequencyProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'loanFrequency');
+      return query.addPropertyName(r'loanRepaymentFrequency');
     });
   }
 

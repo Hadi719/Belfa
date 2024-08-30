@@ -27,13 +27,19 @@ const GroupSchema = CollectionSchema(
       name: r'bankCardNumber',
       type: IsarType.long,
     ),
-    r'name': PropertySchema(
+    r'loanTurns': PropertySchema(
       id: 2,
+      name: r'loanTurns',
+      type: IsarType.objectList,
+      target: r'LoanTurn',
+    ),
+    r'name': PropertySchema(
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'startDate': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'startDate',
       type: IsarType.dateTime,
     )
@@ -51,21 +57,15 @@ const GroupSchema = CollectionSchema(
       target: r'Member',
       single: false,
     ),
-    r'loanTurn': LinkSchema(
-      id: -4842794575481311250,
-      name: r'loanTurn',
-      target: r'LoanTurn',
-      single: false,
-    ),
-    r'loan': LinkSchema(
+    r'loans': LinkSchema(
       id: -4615748540892248321,
-      name: r'loan',
+      name: r'loans',
       target: r'Loan',
       single: false,
       linkName: r'group',
     )
   },
-  embeddedSchemas: {},
+  embeddedSchemas: {r'LoanTurn': LoanTurnSchema},
   getId: _groupGetId,
   getLinks: _groupGetLinks,
   attach: _groupAttach,
@@ -78,6 +78,14 @@ int _groupEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.loanTurns.length * 3;
+  {
+    final offsets = allOffsets[LoanTurn]!;
+    for (var i = 0; i < object.loanTurns.length; i++) {
+      final value = object.loanTurns[i];
+      bytesCount += LoanTurnSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
@@ -90,8 +98,14 @@ void _groupSerialize(
 ) {
   writer.writeLong(offsets[0], object.bankAccountNumber);
   writer.writeLong(offsets[1], object.bankCardNumber);
-  writer.writeString(offsets[2], object.name);
-  writer.writeDateTime(offsets[3], object.startDate);
+  writer.writeObjectList<LoanTurn>(
+    offsets[2],
+    allOffsets,
+    LoanTurnSchema.serialize,
+    object.loanTurns,
+  );
+  writer.writeString(offsets[3], object.name);
+  writer.writeDateTime(offsets[4], object.startDate);
 }
 
 Group _groupDeserialize(
@@ -104,8 +118,8 @@ Group _groupDeserialize(
   object.bankAccountNumber = reader.readLongOrNull(offsets[0]);
   object.bankCardNumber = reader.readLongOrNull(offsets[1]);
   object.id = id;
-  object.name = reader.readString(offsets[2]);
-  object.startDate = reader.readDateTime(offsets[3]);
+  object.name = reader.readString(offsets[3]);
+  object.startDate = reader.readDateTime(offsets[4]);
   return object;
 }
 
@@ -121,8 +135,16 @@ P _groupDeserializeProp<P>(
     case 1:
       return (reader.readLongOrNull(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readObjectList<LoanTurn>(
+            offset,
+            LoanTurnSchema.deserialize,
+            allOffsets,
+            LoanTurn(),
+          ) ??
+          []) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -134,14 +156,13 @@ Id _groupGetId(Group object) {
 }
 
 List<IsarLinkBase<dynamic>> _groupGetLinks(Group object) {
-  return [object.member, object.loanTurn, object.loan];
+  return [object.member, object.loans];
 }
 
 void _groupAttach(IsarCollection<dynamic> col, Id id, Group object) {
   object.id = id;
   object.member.attach(col, col.isar.collection<Member>(), r'member', id);
-  object.loanTurn.attach(col, col.isar.collection<LoanTurn>(), r'loanTurn', id);
-  object.loan.attach(col, col.isar.collection<Loan>(), r'loan', id);
+  object.loans.attach(col, col.isar.collection<Loan>(), r'loans', id);
 }
 
 extension GroupQueryWhereSort on QueryBuilder<Group, Group, QWhere> {
@@ -412,6 +433,90 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'loanTurns',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'loanTurns',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'loanTurns',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'loanTurns',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'loanTurns',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'loanTurns',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Group, Group, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -594,7 +699,14 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
   }
 }
 
-extension GroupQueryObject on QueryBuilder<Group, Group, QFilterCondition> {}
+extension GroupQueryObject on QueryBuilder<Group, Group, QFilterCondition> {
+  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnsElement(
+      FilterQuery<LoanTurn> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'loanTurns');
+    });
+  }
+}
 
 extension GroupQueryLinks on QueryBuilder<Group, Group, QFilterCondition> {
   QueryBuilder<Group, Group, QAfterFilterCondition> member(
@@ -653,51 +765,50 @@ extension GroupQueryLinks on QueryBuilder<Group, Group, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurn(
-      FilterQuery<LoanTurn> q) {
+  QueryBuilder<Group, Group, QAfterFilterCondition> loans(FilterQuery<Loan> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'loanTurn');
+      return query.link(q, r'loans');
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnLengthEqualTo(
+  QueryBuilder<Group, Group, QAfterFilterCondition> loansLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loanTurn', length, true, length, true);
+      return query.linkLength(r'loans', length, true, length, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnIsEmpty() {
+  QueryBuilder<Group, Group, QAfterFilterCondition> loansIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loanTurn', 0, true, 0, true);
+      return query.linkLength(r'loans', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnIsNotEmpty() {
+  QueryBuilder<Group, Group, QAfterFilterCondition> loansIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loanTurn', 0, false, 999999, true);
+      return query.linkLength(r'loans', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnLengthLessThan(
+  QueryBuilder<Group, Group, QAfterFilterCondition> loansLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loanTurn', 0, true, length, include);
+      return query.linkLength(r'loans', 0, true, length, include);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnLengthGreaterThan(
+  QueryBuilder<Group, Group, QAfterFilterCondition> loansLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loanTurn', length, include, 999999, true);
+      return query.linkLength(r'loans', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanTurnLengthBetween(
+  QueryBuilder<Group, Group, QAfterFilterCondition> loansLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -705,62 +816,7 @@ extension GroupQueryLinks on QueryBuilder<Group, Group, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'loanTurn', lower, includeLower, upper, includeUpper);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> loan(FilterQuery<Loan> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'loan');
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> loanLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'loan', lower, includeLower, upper, includeUpper);
+          r'loans', lower, includeLower, upper, includeUpper);
     });
   }
 }
@@ -923,6 +979,12 @@ extension GroupQueryProperty on QueryBuilder<Group, Group, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Group, List<LoanTurn>, QQueryOperations> loanTurnsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'loanTurns');
+    });
+  }
+
   QueryBuilder<Group, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -936,14 +998,14 @@ extension GroupQueryProperty on QueryBuilder<Group, Group, QQueryProperty> {
   }
 }
 
+// **************************************************************************
+// IsarEmbeddedGenerator
+// **************************************************************************
+
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetLoanTurnCollection on Isar {
-  IsarCollection<LoanTurn> get loanTurns => this.collection();
-}
-
-const LoanTurnSchema = CollectionSchema(
+const LoanTurnSchema = Schema(
   name: r'LoanTurn',
   id: 5464536919949472241,
   properties: {
@@ -962,14 +1024,6 @@ const LoanTurnSchema = CollectionSchema(
   serialize: _loanTurnSerialize,
   deserialize: _loanTurnDeserialize,
   deserializeProp: _loanTurnDeserializeProp,
-  idName: r'id',
-  indexes: {},
-  links: {},
-  embeddedSchemas: {},
-  getId: _loanTurnGetId,
-  getLinks: _loanTurnGetLinks,
-  attach: _loanTurnAttach,
-  version: '3.1.0+1',
 );
 
 int _loanTurnEstimateSize(
@@ -998,7 +1052,6 @@ LoanTurn _loanTurnDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = LoanTurn();
-  object.id = id;
   object.memberId = reader.readLong(offsets[0]);
   object.turn = reader.readLongOrNull(offsets[1]);
   return object;
@@ -1020,147 +1073,8 @@ P _loanTurnDeserializeProp<P>(
   }
 }
 
-Id _loanTurnGetId(LoanTurn object) {
-  return object.id;
-}
-
-List<IsarLinkBase<dynamic>> _loanTurnGetLinks(LoanTurn object) {
-  return [];
-}
-
-void _loanTurnAttach(IsarCollection<dynamic> col, Id id, LoanTurn object) {
-  object.id = id;
-}
-
-extension LoanTurnQueryWhereSort on QueryBuilder<LoanTurn, LoanTurn, QWhere> {
-  QueryBuilder<LoanTurn, LoanTurn, QAfterWhere> anyId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(const IdWhereClause.any());
-    });
-  }
-}
-
-extension LoanTurnQueryWhere on QueryBuilder<LoanTurn, LoanTurn, QWhereClause> {
-  QueryBuilder<LoanTurn, LoanTurn, QAfterWhereClause> idEqualTo(Id id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterWhereClause> idNotEqualTo(Id id) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            )
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            );
-      } else {
-        return query
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            )
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            );
-      }
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterWhereClause> idGreaterThan(Id id,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
-      );
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterWhereClause> idLessThan(Id id,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
-      );
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-}
-
 extension LoanTurnQueryFilter
     on QueryBuilder<LoanTurn, LoanTurn, QFilterCondition> {
-  QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> idEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> memberIdEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -1286,107 +1200,3 @@ extension LoanTurnQueryFilter
 
 extension LoanTurnQueryObject
     on QueryBuilder<LoanTurn, LoanTurn, QFilterCondition> {}
-
-extension LoanTurnQueryLinks
-    on QueryBuilder<LoanTurn, LoanTurn, QFilterCondition> {}
-
-extension LoanTurnQuerySortBy on QueryBuilder<LoanTurn, LoanTurn, QSortBy> {
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> sortByMemberId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'memberId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> sortByMemberIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'memberId', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> sortByTurn() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'turn', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> sortByTurnDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'turn', Sort.desc);
-    });
-  }
-}
-
-extension LoanTurnQuerySortThenBy
-    on QueryBuilder<LoanTurn, LoanTurn, QSortThenBy> {
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> thenById() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> thenByIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> thenByMemberId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'memberId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> thenByMemberIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'memberId', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> thenByTurn() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'turn', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterSortBy> thenByTurnDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'turn', Sort.desc);
-    });
-  }
-}
-
-extension LoanTurnQueryWhereDistinct
-    on QueryBuilder<LoanTurn, LoanTurn, QDistinct> {
-  QueryBuilder<LoanTurn, LoanTurn, QDistinct> distinctByMemberId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'memberId');
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QDistinct> distinctByTurn() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'turn');
-    });
-  }
-}
-
-extension LoanTurnQueryProperty
-    on QueryBuilder<LoanTurn, LoanTurn, QQueryProperty> {
-  QueryBuilder<LoanTurn, int, QQueryOperations> idProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
-    });
-  }
-
-  QueryBuilder<LoanTurn, int, QQueryOperations> memberIdProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'memberId');
-    });
-  }
-
-  QueryBuilder<LoanTurn, int?, QQueryOperations> turnProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'turn');
-    });
-  }
-}

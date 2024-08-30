@@ -4,111 +4,95 @@ import 'package:logging/logging.dart';
 
 import '../model/db/loan.dart';
 import '../services/isar_service.dart';
-import '../utils/usecase/try_method.dart';
+import '../utils/usecase/execute_and_log.dart';
 
 Logger log = Logger('main.repository.loan');
 
+/// Repository for managing [Loan] entities in the Isar database.
 class LoanRepository {
+  /// Isar collection for accessing [Loan] entities.
   late IsarCollection<Loan> loans;
 
   late Isar _isar;
 
+  /// Initializes the repository by obtaining a reference to the [Isar] instance
+  /// and the [loans] collection.
   LoanRepository init() {
-    try {
-      log.info('loan repository init started...');
+    log.info('Initializing LoanRepository...');
 
+    try {
       _isar = Get.find<IsarService>().isar;
       loans = _isar.loans;
 
-      log.info('loan repository init completed');
-      return this;
+      log.info('LoanRepository initialized.');
     } catch (e) {
-      log.severe('Failed to initialize loan repository', [e]);
+      log.severe('Failed to initialize LoanRepository: $e', [e]);
       rethrow;
     }
+
+    return this;
   }
 
-  /// Inserts/updates a loan
-  Future<Id> insertloan(Loan data) async {
-    return tryMethod<Id>(
-      method: () async {
-        late Id id;
-        await _isar.writeTxn(() async {
-          id = await loans.put(data);
-        });
-        return id;
-      },
-      log: log,
-      message: 'Insert loan',
+  /// Inserts or updates a [Loan] entity.
+  Future<Id> insertLoan(Loan loan) async {
+    return executeAndLog<Id>(
+      method: () => _isar.writeTxn(() => loans.put(loan)),
+      logger: log,
+      taskDescription: 'Insert loan',
+      extraMessageBuilder: (id) => 'Inserted loan with ID: $id.',
     );
   }
 
-  /// Inserts/updates list of loans
-  Future<List<Id>> insertloans(List<Loan> data) async {
-    return tryMethod<List<Id>>(
-      method: () async {
-        List<Id> ids = <Id>[];
-        await _isar.writeTxn(() async {
-          ids.addAll(await loans.putAll(data));
-        });
-        return ids;
-      },
-      log: log,
-      message: 'Insert loans',
-      extraMessage: '==> ${data.length} out of ${data.length} was successful',
+  /// Inserts or updates a list of [Loan] entities.
+  Future<List<Id>> insertLoans(List<Loan> loans) async {
+    return executeAndLog<List<Id>>(
+      method: () => _isar.writeTxn(() => this.loans.putAll(loans)),
+      logger: log,
+      taskDescription: 'Insert loans',
+      extraMessageBuilder: (ids) =>
+          'Inserted ${ids.length} out of ${loans.length} loans successfully.',
     );
   }
 
-  /// Deletes a loan
-  Future<bool> deleteloan(Id id) async {
-    return tryMethod<bool>(
-      method: () async {
-        bool success = false;
-        await _isar.writeTxn(() async {
-          success = await loans.delete(id);
-        });
-        return success;
-      },
-      log: log,
-      message: 'Delete loan (id: $id)',
+  /// Deletes a [Loan] entity by its ID.
+  Future<bool> deleteLoan(Id id) async {
+    return executeAndLog<bool>(
+      method: () => _isar.writeTxn(() => loans.delete(id)),
+      logger: log,
+      taskDescription: 'Delete loan',
+      extraMessageBuilder: (success) => success
+          ? 'Loan with ID: $id deleted successfully.'
+          : 'Failed to delete loan with ID: $id.',
     );
   }
 
-  /// Deletes loans
-  Future<int> deleteloans(List<Id> ids) async {
-    return tryMethod<int>(
-      method: () async {
-        int count = 0;
-        await _isar.writeTxn(() async {
-          count = await loans.deleteAll(ids);
-        });
-        return count;
-      },
-      log: log,
-      message: 'Delete loans',
-      extraMessage: '==> ${ids.length} out of ${ids.length} was successful',
+  /// Deletes multiple [Loan] entities by their IDs.
+  Future<int> deleteLoans(List<Id> ids) async {
+    return executeAndLog<int>(
+      method: () => _isar.writeTxn(() => loans.deleteAll(ids)),
+      logger: log,
+      taskDescription: 'Delete loans',
+      extraMessageBuilder: (count) =>
+          'Deleted $count out of ${ids.length} loans successfully.',
     );
   }
 
-  /// Finds loan by id
-  Future<Loan?> findloanById(Id id) async {
-    return tryMethod<Loan?>(
-      method: () async {
-        return await loans.get(id);
-      },
-      log: log,
-      message: 'Find loan by id',
+  /// Finds a [Loan] entity by its ID.
+  Future<Loan?> findLoanById(Id id) async {
+    return executeAndLog<Loan?>(
+      method: () => loans.get(id),
+      logger: log,
+      taskDescription: 'Find loan by ID',
     );
   }
 
-  /// Gets all loans
-  Future<List<Loan>> getAllloans() async {
-    return tryMethod<List<Loan>>(
-      method: () async {
-        return await loans.where().findAll();
-      },
-      log: log,
-      message: 'get all loans',
+  /// Retrieves all [Loan] entities from the database.
+  Future<List<Loan>> getAllLoans() async {
+    return executeAndLog<List<Loan>>(
+      method: () => loans.where().findAll(),
+      logger: log,
+      taskDescription: 'Get all loans',
+      extraMessageBuilder: (loans) => 'Retrieved ${loans.length} loans.',
     );
   }
 }

@@ -5,28 +5,41 @@ import 'member.dart';
 
 part 'group.g.dart';
 
-@Collection()
+/// Represents a group of members in the application.
+@collection
 class Group {
+  /// Unique identifier for the group.
   Id id = Isar.autoIncrement;
 
+  /// Name of the group.
   late String name;
 
+  /// Date when the group was started.
   DateTime startDate = DateTime.now();
 
+  /// Bank card number associated with the group (optional).
   int? bankCardNumber;
+
+  /// Bank account number associated with the group (optional).
   int? bankAccountNumber;
 
+  /// Members belonging to this group.
   final member = IsarLinks<Member>();
 
-  final loanTurn = IsarLinks<LoanTurn>();
+  // Embed LoanTurn within Group
+  final List<LoanTurn> loanTurns = [];
 
+  /// Loans associated with this group.
   @Backlink(to: 'group')
-  final loan = IsarLinks<Loan>();
+  final loans = IsarLinks<Loan>();
 }
 
-@Collection()
+/// Represents a loan turn assigned to a member within a group.
+@embedded
 class LoanTurn {
-  Id id = Isar.autoIncrement;
+  /// ID of the member associated with this loan turn.
   late int memberId;
+
+  /// The turn number assigned to the member for loan allocation.
   int? turn;
 }

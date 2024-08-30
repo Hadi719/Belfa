@@ -40,16 +40,16 @@ const MemberSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'loan': LinkSchema(
+    r'loans': LinkSchema(
       id: -2755175249575107573,
-      name: r'loan',
+      name: r'loans',
       target: r'Loan',
       single: false,
       linkName: r'member',
     ),
-    r'group': LinkSchema(
+    r'groups': LinkSchema(
       id: -5330085195732701086,
-      name: r'group',
+      name: r'groups',
       target: r'Group',
       single: false,
       linkName: r'member',
@@ -137,13 +137,13 @@ Id _memberGetId(Member object) {
 }
 
 List<IsarLinkBase<dynamic>> _memberGetLinks(Member object) {
-  return [object.loan, object.group];
+  return [object.loans, object.groups];
 }
 
 void _memberAttach(IsarCollection<dynamic> col, Id id, Member object) {
   object.id = id;
-  object.loan.attach(col, col.isar.collection<Loan>(), r'loan', id);
-  object.group.attach(col, col.isar.collection<Group>(), r'group', id);
+  object.loans.attach(col, col.isar.collection<Loan>(), r'loans', id);
+  object.groups.attach(col, col.isar.collection<Group>(), r'groups', id);
 }
 
 extension MemberQueryWhereSort on QueryBuilder<Member, Member, QWhere> {
@@ -715,51 +715,51 @@ extension MemberQueryFilter on QueryBuilder<Member, Member, QFilterCondition> {
 extension MemberQueryObject on QueryBuilder<Member, Member, QFilterCondition> {}
 
 extension MemberQueryLinks on QueryBuilder<Member, Member, QFilterCondition> {
-  QueryBuilder<Member, Member, QAfterFilterCondition> loan(
+  QueryBuilder<Member, Member, QAfterFilterCondition> loans(
       FilterQuery<Loan> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'loan');
+      return query.link(q, r'loans');
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> loanLengthEqualTo(
+  QueryBuilder<Member, Member, QAfterFilterCondition> loansLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', length, true, length, true);
+      return query.linkLength(r'loans', length, true, length, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> loanIsEmpty() {
+  QueryBuilder<Member, Member, QAfterFilterCondition> loansIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', 0, true, 0, true);
+      return query.linkLength(r'loans', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> loanIsNotEmpty() {
+  QueryBuilder<Member, Member, QAfterFilterCondition> loansIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', 0, false, 999999, true);
+      return query.linkLength(r'loans', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> loanLengthLessThan(
+  QueryBuilder<Member, Member, QAfterFilterCondition> loansLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', 0, true, length, include);
+      return query.linkLength(r'loans', 0, true, length, include);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> loanLengthGreaterThan(
+  QueryBuilder<Member, Member, QAfterFilterCondition> loansLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'loan', length, include, 999999, true);
+      return query.linkLength(r'loans', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> loanLengthBetween(
+  QueryBuilder<Member, Member, QAfterFilterCondition> loansLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -767,55 +767,55 @@ extension MemberQueryLinks on QueryBuilder<Member, Member, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'loan', lower, includeLower, upper, includeUpper);
+          r'loans', lower, includeLower, upper, includeUpper);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> group(
+  QueryBuilder<Member, Member, QAfterFilterCondition> groups(
       FilterQuery<Group> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'group');
+      return query.link(q, r'groups');
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> groupLengthEqualTo(
+  QueryBuilder<Member, Member, QAfterFilterCondition> groupsLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', length, true, length, true);
+      return query.linkLength(r'groups', length, true, length, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> groupIsEmpty() {
+  QueryBuilder<Member, Member, QAfterFilterCondition> groupsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', 0, true, 0, true);
+      return query.linkLength(r'groups', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> groupIsNotEmpty() {
+  QueryBuilder<Member, Member, QAfterFilterCondition> groupsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', 0, false, 999999, true);
+      return query.linkLength(r'groups', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> groupLengthLessThan(
+  QueryBuilder<Member, Member, QAfterFilterCondition> groupsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', 0, true, length, include);
+      return query.linkLength(r'groups', 0, true, length, include);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> groupLengthGreaterThan(
+  QueryBuilder<Member, Member, QAfterFilterCondition> groupsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', length, include, 999999, true);
+      return query.linkLength(r'groups', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Member, Member, QAfterFilterCondition> groupLengthBetween(
+  QueryBuilder<Member, Member, QAfterFilterCondition> groupsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -823,7 +823,7 @@ extension MemberQueryLinks on QueryBuilder<Member, Member, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'group', lower, includeLower, upper, includeUpper);
+          r'groups', lower, includeLower, upper, includeUpper);
     });
   }
 }

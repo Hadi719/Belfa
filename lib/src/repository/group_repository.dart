@@ -4,111 +4,95 @@ import 'package:logging/logging.dart';
 
 import '../model/db/group.dart';
 import '../services/isar_service.dart';
-import '../utils/usecase/try_method.dart';
+import '../utils/usecase/execute_and_log.dart';
 
 Logger log = Logger('main.repository.group');
 
+/// Repository for managing [Group] entities in the Isar database.
 class GroupRepository {
+  /// Isar collection for accessing [Group] entities.
   late IsarCollection<Group> groups;
 
   late Isar _isar;
 
+  /// Initializes the repository by obtaining a reference to the [Isar] instance
+  /// and the [groups] collection.
   GroupRepository init() {
-    try {
-      log.info('Group repository init started...');
+    log.info('Initializing GroupRepository...');
 
+    try {
       _isar = Get.find<IsarService>().isar;
       groups = _isar.groups;
 
-      log.info('Group repository init completed');
-      return this;
+      log.info('GroupRepository initialized.');
     } catch (e) {
-      log.severe('Failed to initialize Group repository', [e]);
+      log.severe('Failed to initialize GroupRepository: $e', [e]);
       rethrow;
     }
+
+    return this;
   }
 
-  /// Inserts/updates a group
-  Future<Id> insertGroup(Group data) async {
-    return tryMethod<Id>(
-      method: () async {
-        late Id id;
-        await _isar.writeTxn(() async {
-          id = await groups.put(data);
-        });
-        return id;
-      },
-      log: log,
-      message: 'Insert group',
+  /// Inserts or updates a [Group] entity.
+  Future<Id> insertGroup(Group group) async {
+    return executeAndLog<Id>(
+      method: () => _isar.writeTxn(() => groups.put(group)),
+      logger: log,
+      taskDescription: 'Insert group',
+      extraMessageBuilder: (id) => 'Inserted group with ID: $id.',
     );
   }
 
-  /// Inserts/updates list of groups
-  Future<List<Id>> insertGroups(List<Group> data) async {
-    return tryMethod<List<Id>>(
-      method: () async {
-        List<Id> ids = <Id>[];
-        await _isar.writeTxn(() async {
-          ids.addAll(await groups.putAll(data));
-        });
-        return ids;
-      },
-      log: log,
-      message: 'Insert groups',
-      extraMessage: '==> ${data.length} out of ${data.length} was successful',
+  /// Inserts or updates a list of [Group] entities.
+  Future<List<Id>> insertGroups(List<Group> groups) async {
+    return executeAndLog<List<Id>>(
+      method: () => _isar.writeTxn(() => this.groups.putAll(groups)),
+      logger: log,
+      taskDescription: 'Insert groups',
+      extraMessageBuilder: (ids) =>
+          'Inserted ${ids.length} out of ${groups.length} groups successfully.',
     );
   }
 
-  /// Deletes a group
+  /// Deletes a [Group] entity by its ID.
   Future<bool> deleteGroup(Id id) async {
-    return tryMethod<bool>(
-      method: () async {
-        bool success = false;
-        await _isar.writeTxn(() async {
-          success = await groups.delete(id);
-        });
-        return success;
-      },
-      log: log,
-      message: 'Delete group (id: $id)',
+    return executeAndLog<bool>(
+      method: () => _isar.writeTxn(() => groups.delete(id)),
+      logger: log,
+      taskDescription: 'Delete group',
+      extraMessageBuilder: (success) => success
+          ? 'Group with ID: $id deleted successfully.'
+          : 'Failed to delete group with ID: $id.',
     );
   }
 
-  /// Deletes groups
+  /// Deletes multiple [Group] entities by their IDs.
   Future<int> deleteGroups(List<Id> ids) async {
-    return tryMethod<int>(
-      method: () async {
-        int count = 0;
-        await _isar.writeTxn(() async {
-          count = await groups.deleteAll(ids);
-        });
-        return count;
-      },
-      log: log,
-      message: 'Delete groups',
-      extraMessage: '==> ${ids.length} out of ${ids.length} was successful',
+    return executeAndLog<int>(
+      method: () => _isar.writeTxn(() => groups.deleteAll(ids)),
+      logger: log,
+      taskDescription: 'Delete groups',
+      extraMessageBuilder: (count) =>
+          'Deleted $count out of ${ids.length} groups successfully.',
     );
   }
 
-  /// Finds group by id
+  /// Finds a [Group] entity by its ID.
   Future<Group?> findGroupById(Id id) async {
-    return tryMethod<Group?>(
-      method: () async {
-        return await groups.get(id);
-      },
-      log: log,
-      message: 'Find group by id',
+    return executeAndLog<Group?>(
+      method: () => groups.get(id),
+      logger: log,
+      taskDescription: 'Find group by ID',
     );
   }
 
-  /// Gets all groups
+  /// Retrieves all [Group] entities from the database.
   Future<List<Group>> getAllGroups() async {
-    return tryMethod<List<Group>>(
-      method: () async {
-        return await groups.where().findAll();
-      },
-      log: log,
-      message: 'get all groups',
+    return executeAndLog<List<Group>>(
+      method: () => groups.where().findAll(),
+      logger: log,
+      taskDescription: 'Get all groups',
+      extraMessageBuilder: (groups) => 'Retrieved ${groups.length} groups.',
     );
   }
 }

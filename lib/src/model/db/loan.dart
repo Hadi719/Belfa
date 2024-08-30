@@ -6,45 +6,77 @@ import 'member.dart';
 
 part 'loan.g.dart';
 
-@Collection()
+/// Represents a loan taken by a member within a group.
+@collection
 class Loan {
+  /// Unique identifier for the loan.
   Id id = Isar.autoIncrement;
+
+  /// The principal amount of the loan.
   double? principalAmount;
+
+  /// The annual interest rate of the loan.
   double? interestRate;
+
+  /// The date when the loan was taken.
   DateTime? loanDate;
+
+  /// The date when the loan is expected to be fully repaid.
   DateTime? endDate;
+
+  /// The duration of the loan in terms of the chosen frequency (e.g., months).
   int? loanDuration;
 
+  /// The frequency of loan repayments (e.g., monthly, weekly).
   @enumerated
-  LoanFrequency loanFrequency = LoanFrequency.monthly;
+  LoanRepaymentFrequency loanRepaymentFrequency =
+      LoanRepaymentFrequency.monthly;
 
+  /// The current status of the loan (e.g., active, completed).
   @enumerated
   LoanStatus loanStatus = LoanStatus.active;
 
+  /// The member who took the loan.
   final member = IsarLink<Member>();
+
+  /// The group to which the loan is associated.
   final group = IsarLink<Group>();
-  final installment = IsarLinks<Installment>();
+
+  /// The installments associated with this loan.
+  final installments = IsarLinks<Installment>();
 }
 
-enum LoanFrequency {
-  weekly('هفتگی'),
-  biweekly('دو هفته'),
-  monthly('ماهانه'),
-  quarterly('سه ماهه'),
-  semiAnnually('شش ماهه'),
-  annually('سالانه');
+/// Represents the frequency of loan repayments.
+enum LoanRepaymentFrequency {
+  weekly('Weekly', 'هفتگی'),
+  biweekly('Biweekly', 'دو هفته'),
+  monthly('Monthly', 'ماهانه'),
+  quarterly('Quarterly', 'سه ماهه'),
+  semiAnnually('Semi-Annually', 'شش ماهه'),
+  annually('Annually', 'سالانه');
 
-  const LoanFrequency(this.farsi);
+  /// Creates a new [LoanRepaymentFrequency] with the given English and Farsi representations.
+  const LoanRepaymentFrequency(this.english, this.farsi);
 
+  /// The English representation of the loan repayment frequency.
+  final String english;
+
+  /// The Farsi representation of the loan repayment frequency.
   final String farsi;
 }
 
+/// Represents the current status of a loan.
 enum LoanStatus {
-  active('فعال'),
-  upcoming('در حال انجام'),
-  completed('انجام شده');
+  active('Active', 'فعال'),
+  upcoming('Upcoming', 'در حال انجام'),
+  completed('Completed', 'انجام شده');
 
-  const LoanStatus(this.farsi);
+  /// Creates a new [LoanStatus] with the given English and Farsi representations.
+  const LoanStatus(this.english, this.farsi);
 
+  /// The English representation of the loan status.
+  final String english;
+
+  /// The Farsi representation of the loan status.
   final String farsi;
 }
