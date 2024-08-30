@@ -13,15 +13,19 @@ import '../model/my_app_settings.dart';
 
 Logger log = Logger('main.services.isar');
 
+/// Service class for managing the Isar database.
 class IsarService extends GetxService {
   late final Isar isar;
 
+  /// Initializes the Isar database.
+  ///
+  /// Opens the database with the specified schemas and directory.
+  /// Returns a [Future] that completes with this [IsarService] instance.
   Future<IsarService> init() async {
-    try {
-      log.info('Isar init started...');
+    log.info('Isar init started...');
 
+    try {
       final dir = await getApplicationDocumentsDirectory();
-      // Note: add new collection schema here
       isar = await Isar.open(
         [
           GroupSchema,
@@ -40,12 +44,18 @@ class IsarService extends GetxService {
     }
   }
 
-  /// Clear all collection data
+  /// Clears all data from all collections in the database.
+  ///
+  /// Executes a write transaction to clear the following collections:
+  /// - groups
+  /// - members
+  /// - loans
+  /// - installments
+  /// - myAppSettings
   void clearAllCollectionData() async {
-    try {
-      log.info('Isar clear all collection data started...');
+    log.info('Isar clear all collection data started...');
 
-      // Note: Clear new collection
+    try {
       await isar.writeTxnSync(() async {
         await isar.groups.clear();
         await isar.members.clear();
@@ -61,18 +71,19 @@ class IsarService extends GetxService {
     }
   }
 
-  /// Close Isar connection
+  /// Closes the Isar database connection.
+  ///
+  /// Returns a [Future] that completes with `true` if the database was
+  /// closed successfully, `false` otherwise.
   Future<bool> close() async {
+    log.info('Closing Isar started...');
     try {
-      log.info('Closing Isar started...');
-
-      bool isSuccess = false;
-
-      await isar.writeTxnSync(() async {
-        isSuccess = await isar.close();
-      });
-
-      log.info('Isar closed successfuly');
+      final isSuccess = await isar.close();
+      if (isSuccess) {
+        log.info('Isar closed successfully');
+      } else {
+        log.warning('Isar close returned false');
+      }
       return Future.value(isSuccess);
     } catch (e) {
       log.severe('Closing Isar failed', [e]);
