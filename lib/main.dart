@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'services/services.dart';
+import 'src/services/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initializing services with GetX package.
   await initServices();
 
   runApp(const MyApp());

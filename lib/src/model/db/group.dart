@@ -9,9 +9,9 @@ part 'group.g.dart';
 class Group {
   Id id = Isar.autoIncrement;
 
-  String? name;
+  late String name;
 
-  DateTime? startDate;
+  DateTime startDate = DateTime.now();
 
   int? bankCardNumber;
   int? bankAccountNumber;
@@ -27,6 +27,6 @@ class Group {
 @Collection()
 class LoanTurn {
   Id id = Isar.autoIncrement;
-  int? memberId;
+  late int memberId;
   int? turn;
 }

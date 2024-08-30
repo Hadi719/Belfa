@@ -78,12 +78,7 @@ int _groupEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.name;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
@@ -109,8 +104,8 @@ Group _groupDeserialize(
   object.bankAccountNumber = reader.readLongOrNull(offsets[0]);
   object.bankCardNumber = reader.readLongOrNull(offsets[1]);
   object.id = id;
-  object.name = reader.readStringOrNull(offsets[2]);
-  object.startDate = reader.readDateTimeOrNull(offsets[3]);
+  object.name = reader.readString(offsets[2]);
+  object.startDate = reader.readDateTime(offsets[3]);
   return object;
 }
 
@@ -126,9 +121,9 @@ P _groupDeserializeProp<P>(
     case 1:
       return (reader.readLongOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -417,24 +412,8 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
   QueryBuilder<Group, Group, QAfterFilterCondition> nameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -447,7 +426,7 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
   }
 
   QueryBuilder<Group, Group, QAfterFilterCondition> nameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -462,7 +441,7 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
   }
 
   QueryBuilder<Group, Group, QAfterFilterCondition> nameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -477,8 +456,8 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
   }
 
   QueryBuilder<Group, Group, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -561,24 +540,8 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> startDateIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'startDate',
-      ));
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> startDateIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'startDate',
-      ));
-    });
-  }
-
   QueryBuilder<Group, Group, QAfterFilterCondition> startDateEqualTo(
-      DateTime? value) {
+      DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'startDate',
@@ -588,7 +551,7 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
   }
 
   QueryBuilder<Group, Group, QAfterFilterCondition> startDateGreaterThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -601,7 +564,7 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
   }
 
   QueryBuilder<Group, Group, QAfterFilterCondition> startDateLessThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -614,8 +577,8 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
   }
 
   QueryBuilder<Group, Group, QAfterFilterCondition> startDateBetween(
-    DateTime? lower,
-    DateTime? upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -960,13 +923,13 @@ extension GroupQueryProperty on QueryBuilder<Group, Group, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Group, String?, QQueryOperations> nameProperty() {
+  QueryBuilder<Group, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
   }
 
-  QueryBuilder<Group, DateTime?, QQueryOperations> startDateProperty() {
+  QueryBuilder<Group, DateTime, QQueryOperations> startDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'startDate');
     });
@@ -1036,7 +999,7 @@ LoanTurn _loanTurnDeserialize(
 ) {
   final object = LoanTurn();
   object.id = id;
-  object.memberId = reader.readLongOrNull(offsets[0]);
+  object.memberId = reader.readLong(offsets[0]);
   object.turn = reader.readLongOrNull(offsets[1]);
   return object;
 }
@@ -1049,7 +1012,7 @@ P _loanTurnDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
       return (reader.readLongOrNull(offset)) as P;
     default:
@@ -1198,24 +1161,8 @@ extension LoanTurnQueryFilter
     });
   }
 
-  QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> memberIdIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'memberId',
-      ));
-    });
-  }
-
-  QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> memberIdIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'memberId',
-      ));
-    });
-  }
-
   QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> memberIdEqualTo(
-      int? value) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'memberId',
@@ -1225,7 +1172,7 @@ extension LoanTurnQueryFilter
   }
 
   QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> memberIdGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1238,7 +1185,7 @@ extension LoanTurnQueryFilter
   }
 
   QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> memberIdLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1251,8 +1198,8 @@ extension LoanTurnQueryFilter
   }
 
   QueryBuilder<LoanTurn, LoanTurn, QAfterFilterCondition> memberIdBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -1431,7 +1378,7 @@ extension LoanTurnQueryProperty
     });
   }
 
-  QueryBuilder<LoanTurn, int?, QQueryOperations> memberIdProperty() {
+  QueryBuilder<LoanTurn, int, QQueryOperations> memberIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'memberId');
     });
