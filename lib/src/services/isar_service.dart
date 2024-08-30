@@ -35,13 +35,16 @@ class IsarService extends GetxService {
           MyAppSettingsSchema,
         ],
         directory: dir.path,
+        name: 'Apcha',
       );
+
       log.info('Isar init completed');
-      return this;
     } catch (e) {
       log.severe('Failed to open Isar', [e]);
       rethrow;
     }
+
+    return this;
   }
 
   /// Clears all data from all collections in the database.
