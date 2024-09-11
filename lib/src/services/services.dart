@@ -4,7 +4,7 @@ import 'package:logging/logging.dart';
 import 'isar_service.dart';
 import 'user_preferences_service.dart';
 
-Logger log = Logger('main.services');
+Logger log = Logger('services');
 
 Future<void> initServices() async {
   log.info('Starting Services...');

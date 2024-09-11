@@ -6,7 +6,7 @@ import '../model/db/member.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
-Logger log = Logger('main.repository.member');
+Logger log = Logger('repository.member');
 
 /// Repository for managing [Member] entities in the Isar database.
 class MemberRepository {

@@ -13,7 +13,7 @@ import '../model/db/member.dart';
 import '../model/user_preferences.dart';
 import '../utils/usecase/pick_file_or_directory.dart';
 
-Logger log = Logger('main.services.isar');
+Logger log = Logger('services.isar');
 const String isarDbName = 'Apcha_isar_database';
 
 /// Service for managing the Isar database.

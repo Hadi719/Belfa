@@ -6,7 +6,7 @@ import '../model/db/installment.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
-Logger log = Logger('main.repository.installment');
+Logger log = Logger('repository.installment');
 
 /// Repository for managing [Installment] entities in the Isar database.
 class InstallmentRepository {

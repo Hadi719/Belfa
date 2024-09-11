@@ -7,7 +7,7 @@ import 'package:logging/logging.dart';
 import '../model/user_preferences.dart';
 import 'isar_service.dart';
 
-Logger log = Logger('main.services.preferences');
+Logger log = Logger('services.preferences');
 
 /// Provides access to and manages user preferences stored in the database.
 class UserPreferencesService extends GetxService {

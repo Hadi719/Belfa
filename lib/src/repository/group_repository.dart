@@ -6,7 +6,7 @@ import '../model/db/group.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
-Logger log = Logger('main.repository.group');
+Logger log = Logger('repository.group');
 
 /// Repository for managing [Group] entities in the Isar database.
 class GroupRepository {

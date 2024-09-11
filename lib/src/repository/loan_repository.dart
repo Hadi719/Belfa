@@ -6,7 +6,7 @@ import '../model/db/loan.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
-Logger log = Logger('main.repository.loan');
+Logger log = Logger('repository.loan');
 
 /// Repository for managing [Loan] entities in the Isar database.
 class LoanRepository {

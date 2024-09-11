@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:logging/logging.dart';
 
-Logger log = Logger('main.utils.pickFileOrDirectory');
+Logger log = Logger('utils.pickFileOrDirectory');
 
 /// Prompts the user to select an Isar database file (.isar extension).
 ///
