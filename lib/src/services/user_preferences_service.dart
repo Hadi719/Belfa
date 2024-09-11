@@ -90,8 +90,12 @@ class UserPreferencesService extends GetxService {
   }
 
   /// Deletes user preferences from the database.
-  Future<void> deletePreferences() async {
-    await _prefsCollection.delete(UserPreferences().id);
+  Future<bool> deletePreferences() async {
+    log.info('Deleting preferences...');
+
+    return _isar.writeTxn<bool>(() async {
+      return await _prefsCollection.delete(UserPreferences().id);
+    });
   }
 
   /// Updates the user's admin status and persists the change.
