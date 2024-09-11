@@ -6,11 +6,11 @@ import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../model/app_settings.dart';
 import '../model/db/group.dart';
 import '../model/db/installment.dart';
 import '../model/db/loan.dart';
 import '../model/db/member.dart';
+import '../model/user_preferences.dart';
 import '../utils/usecase/pick_file_or_directory.dart';
 
 Logger log = Logger('main.services.isar');
@@ -35,7 +35,7 @@ class IsarService extends GetxService {
           MemberSchema,
           LoanSchema,
           InstallmentSchema,
-          AppSettingsSchema,
+          UserPreferencesSchema,
         ],
         directory: dir.path,
         name: isarDbName,
@@ -135,7 +135,7 @@ class IsarService extends GetxService {
         await isar.members.clear();
         await isar.loans.clear();
         await isar.installments.clear();
-        await isar.appSettings.clear();
+        await isar.userPreferences.clear();
       });
 
       log.info('All data cleared.');

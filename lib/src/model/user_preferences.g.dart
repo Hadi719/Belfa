@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_settings.dart';
+part of 'user_preferences.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,51 +9,61 @@ part of 'app_settings.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetAppSettingsCollection on Isar {
-  IsarCollection<AppSettings> get appSettings => this.collection();
+extension GetUserPreferencesCollection on Isar {
+  IsarCollection<UserPreferences> get userPreferences => this.collection();
 }
 
-const AppSettingsSchema = CollectionSchema(
-  name: r'AppSettings',
-  id: -5633561779022347008,
+const UserPreferencesSchema = CollectionSchema(
+  name: r'UserPreferences',
+  id: -7545901164102504045,
   properties: {
     r'countryCode': PropertySchema(
       id: 0,
       name: r'countryCode',
       type: IsarType.string,
     ),
-    r'isAdmin': PropertySchema(
+    r'hasAdminAccess': PropertySchema(
       id: 1,
-      name: r'isAdmin',
+      name: r'hasAdminAccess',
       type: IsarType.bool,
     ),
-    r'isDarkMode': PropertySchema(
+    r'isFirstLaunch': PropertySchema(
       id: 2,
-      name: r'isDarkMode',
+      name: r'isFirstLaunch',
+      type: IsarType.bool,
+    ),
+    r'isLoggedIn': PropertySchema(
+      id: 3,
+      name: r'isLoggedIn',
       type: IsarType.bool,
     ),
     r'languageCode': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'languageCode',
       type: IsarType.string,
+    ),
+    r'prefersDarkMode': PropertySchema(
+      id: 5,
+      name: r'prefersDarkMode',
+      type: IsarType.bool,
     )
   },
-  estimateSize: _appSettingsEstimateSize,
-  serialize: _appSettingsSerialize,
-  deserialize: _appSettingsDeserialize,
-  deserializeProp: _appSettingsDeserializeProp,
+  estimateSize: _userPreferencesEstimateSize,
+  serialize: _userPreferencesSerialize,
+  deserialize: _userPreferencesDeserialize,
+  deserializeProp: _userPreferencesDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _appSettingsGetId,
-  getLinks: _appSettingsGetLinks,
-  attach: _appSettingsAttach,
+  getId: _userPreferencesGetId,
+  getLinks: _userPreferencesGetLinks,
+  attach: _userPreferencesAttach,
   version: '3.1.0+1',
 );
 
-int _appSettingsEstimateSize(
-  AppSettings object,
+int _userPreferencesEstimateSize(
+  UserPreferences object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -68,34 +78,38 @@ int _appSettingsEstimateSize(
   return bytesCount;
 }
 
-void _appSettingsSerialize(
-  AppSettings object,
+void _userPreferencesSerialize(
+  UserPreferences object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.countryCode);
-  writer.writeBool(offsets[1], object.isAdmin);
-  writer.writeBool(offsets[2], object.isDarkMode);
-  writer.writeString(offsets[3], object.languageCode);
+  writer.writeBool(offsets[1], object.hasAdminAccess);
+  writer.writeBool(offsets[2], object.isFirstLaunch);
+  writer.writeBool(offsets[3], object.isLoggedIn);
+  writer.writeString(offsets[4], object.languageCode);
+  writer.writeBool(offsets[5], object.prefersDarkMode);
 }
 
-AppSettings _appSettingsDeserialize(
+UserPreferences _userPreferencesDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = AppSettings();
+  final object = UserPreferences();
   object.countryCode = reader.readStringOrNull(offsets[0]);
+  object.hasAdminAccess = reader.readBool(offsets[1]);
   object.id = id;
-  object.isAdmin = reader.readBool(offsets[1]);
-  object.isDarkMode = reader.readBool(offsets[2]);
-  object.languageCode = reader.readString(offsets[3]);
+  object.isFirstLaunch = reader.readBool(offsets[2]);
+  object.isLoggedIn = reader.readBool(offsets[3]);
+  object.languageCode = reader.readString(offsets[4]);
+  object.prefersDarkMode = reader.readBool(offsets[5]);
   return object;
 }
 
-P _appSettingsDeserializeProp<P>(
+P _userPreferencesDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -109,37 +123,42 @@ P _appSettingsDeserializeProp<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readBool(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readBool(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _appSettingsGetId(AppSettings object) {
+Id _userPreferencesGetId(UserPreferences object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _appSettingsGetLinks(AppSettings object) {
+List<IsarLinkBase<dynamic>> _userPreferencesGetLinks(UserPreferences object) {
   return [];
 }
 
-void _appSettingsAttach(
-    IsarCollection<dynamic> col, Id id, AppSettings object) {
+void _userPreferencesAttach(
+    IsarCollection<dynamic> col, Id id, UserPreferences object) {
   object.id = id;
 }
 
-extension AppSettingsQueryWhereSort
-    on QueryBuilder<AppSettings, AppSettings, QWhere> {
-  QueryBuilder<AppSettings, AppSettings, QAfterWhere> anyId() {
+extension UserPreferencesQueryWhereSort
+    on QueryBuilder<UserPreferences, UserPreferences, QWhere> {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension AppSettingsQueryWhere
-    on QueryBuilder<AppSettings, AppSettings, QWhereClause> {
-  QueryBuilder<AppSettings, AppSettings, QAfterWhereClause> idEqualTo(Id id) {
+extension UserPreferencesQueryWhere
+    on QueryBuilder<UserPreferences, UserPreferences, QWhereClause> {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterWhereClause> idEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -148,8 +167,8 @@ extension AppSettingsQueryWhere
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterWhereClause>
+      idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -171,8 +190,8 @@ extension AppSettingsQueryWhere
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterWhereClause> idGreaterThan(Id id,
-      {bool include = false}) {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterWhereClause>
+      idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -180,7 +199,8 @@ extension AppSettingsQueryWhere
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<UserPreferences, UserPreferences, QAfterWhereClause> idLessThan(
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -189,7 +209,7 @@ extension AppSettingsQueryWhere
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterWhereClause> idBetween(
+  QueryBuilder<UserPreferences, UserPreferences, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -206,9 +226,9 @@ extension AppSettingsQueryWhere
   }
 }
 
-extension AppSettingsQueryFilter
-    on QueryBuilder<AppSettings, AppSettings, QFilterCondition> {
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+extension UserPreferencesQueryFilter
+    on QueryBuilder<UserPreferences, UserPreferences, QFilterCondition> {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -217,7 +237,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -226,7 +246,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -240,7 +260,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeGreaterThan(
     String? value, {
     bool include = false,
@@ -256,7 +276,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeLessThan(
     String? value, {
     bool include = false,
@@ -272,7 +292,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeBetween(
     String? lower,
     String? upper, {
@@ -292,7 +312,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -306,7 +326,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -320,7 +340,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -331,7 +351,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -342,7 +362,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -352,7 +372,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       countryCodeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -362,8 +382,18 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition> idEqualTo(
-      Id value) {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      hasAdminAccessEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hasAdminAccess',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -372,7 +402,8 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -385,7 +416,8 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition> idLessThan(
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -398,7 +430,8 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition> idBetween(
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -415,27 +448,27 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition> isAdminEqualTo(
-      bool value) {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      isFirstLaunchEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isAdmin',
+        property: r'isFirstLaunch',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
-      isDarkModeEqualTo(bool value) {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      isLoggedInEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isDarkMode',
+        property: r'isLoggedIn',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -449,7 +482,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeGreaterThan(
     String value, {
     bool include = false,
@@ -465,7 +498,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeLessThan(
     String value, {
     bool include = false,
@@ -481,7 +514,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeBetween(
     String lower,
     String upper, {
@@ -501,7 +534,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -515,7 +548,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -529,7 +562,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -540,7 +573,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -551,7 +584,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -561,7 +594,7 @@ extension AppSettingsQueryFilter
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
       languageCodeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -570,188 +603,301 @@ extension AppSettingsQueryFilter
       ));
     });
   }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterFilterCondition>
+      prefersDarkModeEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'prefersDarkMode',
+        value: value,
+      ));
+    });
+  }
 }
 
-extension AppSettingsQueryObject
-    on QueryBuilder<AppSettings, AppSettings, QFilterCondition> {}
+extension UserPreferencesQueryObject
+    on QueryBuilder<UserPreferences, UserPreferences, QFilterCondition> {}
 
-extension AppSettingsQueryLinks
-    on QueryBuilder<AppSettings, AppSettings, QFilterCondition> {}
+extension UserPreferencesQueryLinks
+    on QueryBuilder<UserPreferences, UserPreferences, QFilterCondition> {}
 
-extension AppSettingsQuerySortBy
-    on QueryBuilder<AppSettings, AppSettings, QSortBy> {
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortByCountryCode() {
+extension UserPreferencesQuerySortBy
+    on QueryBuilder<UserPreferences, UserPreferences, QSortBy> {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByCountryCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'countryCode', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortByCountryCodeDesc() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByCountryCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'countryCode', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortByIsAdmin() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByHasAdminAccess() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isAdmin', Sort.asc);
+      return query.addSortBy(r'hasAdminAccess', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortByIsAdminDesc() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByHasAdminAccessDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isAdmin', Sort.desc);
+      return query.addSortBy(r'hasAdminAccess', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortByIsDarkMode() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByIsFirstLaunch() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.asc);
+      return query.addSortBy(r'isFirstLaunch', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortByIsDarkModeDesc() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByIsFirstLaunchDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.desc);
+      return query.addSortBy(r'isFirstLaunch', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortByLanguageCode() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByIsLoggedIn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLoggedIn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByIsLoggedInDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLoggedIn', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByLanguageCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'languageCode', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
       sortByLanguageCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'languageCode', Sort.desc);
     });
   }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByPrefersDarkMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prefersDarkMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      sortByPrefersDarkModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prefersDarkMode', Sort.desc);
+    });
+  }
 }
 
-extension AppSettingsQuerySortThenBy
-    on QueryBuilder<AppSettings, AppSettings, QSortThenBy> {
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByCountryCode() {
+extension UserPreferencesQuerySortThenBy
+    on QueryBuilder<UserPreferences, UserPreferences, QSortThenBy> {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByCountryCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'countryCode', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByCountryCodeDesc() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByCountryCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'countryCode', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenById() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByHasAdminAccess() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasAdminAccess', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByHasAdminAccessDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasAdminAccess', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByIsAdmin() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByIsFirstLaunch() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isAdmin', Sort.asc);
+      return query.addSortBy(r'isFirstLaunch', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByIsAdminDesc() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByIsFirstLaunchDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isAdmin', Sort.desc);
+      return query.addSortBy(r'isFirstLaunch', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByIsDarkMode() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByIsLoggedIn() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.asc);
+      return query.addSortBy(r'isLoggedIn', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByIsDarkModeDesc() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByIsLoggedInDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.desc);
+      return query.addSortBy(r'isLoggedIn', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByLanguageCode() {
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByLanguageCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'languageCode', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QAfterSortBy>
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
       thenByLanguageCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'languageCode', Sort.desc);
     });
   }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByPrefersDarkMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prefersDarkMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QAfterSortBy>
+      thenByPrefersDarkModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prefersDarkMode', Sort.desc);
+    });
+  }
 }
 
-extension AppSettingsQueryWhereDistinct
-    on QueryBuilder<AppSettings, AppSettings, QDistinct> {
-  QueryBuilder<AppSettings, AppSettings, QDistinct> distinctByCountryCode(
-      {bool caseSensitive = true}) {
+extension UserPreferencesQueryWhereDistinct
+    on QueryBuilder<UserPreferences, UserPreferences, QDistinct> {
+  QueryBuilder<UserPreferences, UserPreferences, QDistinct>
+      distinctByCountryCode({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'countryCode', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QDistinct> distinctByIsAdmin() {
+  QueryBuilder<UserPreferences, UserPreferences, QDistinct>
+      distinctByHasAdminAccess() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isAdmin');
+      return query.addDistinctBy(r'hasAdminAccess');
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QDistinct> distinctByIsDarkMode() {
+  QueryBuilder<UserPreferences, UserPreferences, QDistinct>
+      distinctByIsFirstLaunch() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isDarkMode');
+      return query.addDistinctBy(r'isFirstLaunch');
     });
   }
 
-  QueryBuilder<AppSettings, AppSettings, QDistinct> distinctByLanguageCode(
-      {bool caseSensitive = true}) {
+  QueryBuilder<UserPreferences, UserPreferences, QDistinct>
+      distinctByIsLoggedIn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isLoggedIn');
+    });
+  }
+
+  QueryBuilder<UserPreferences, UserPreferences, QDistinct>
+      distinctByLanguageCode({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'languageCode', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<UserPreferences, UserPreferences, QDistinct>
+      distinctByPrefersDarkMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'prefersDarkMode');
+    });
+  }
 }
 
-extension AppSettingsQueryProperty
-    on QueryBuilder<AppSettings, AppSettings, QQueryProperty> {
-  QueryBuilder<AppSettings, int, QQueryOperations> idProperty() {
+extension UserPreferencesQueryProperty
+    on QueryBuilder<UserPreferences, UserPreferences, QQueryProperty> {
+  QueryBuilder<UserPreferences, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<AppSettings, String?, QQueryOperations> countryCodeProperty() {
+  QueryBuilder<UserPreferences, String?, QQueryOperations>
+      countryCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'countryCode');
     });
   }
 
-  QueryBuilder<AppSettings, bool, QQueryOperations> isAdminProperty() {
+  QueryBuilder<UserPreferences, bool, QQueryOperations>
+      hasAdminAccessProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isAdmin');
+      return query.addPropertyName(r'hasAdminAccess');
     });
   }
 
-  QueryBuilder<AppSettings, bool, QQueryOperations> isDarkModeProperty() {
+  QueryBuilder<UserPreferences, bool, QQueryOperations>
+      isFirstLaunchProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isDarkMode');
+      return query.addPropertyName(r'isFirstLaunch');
     });
   }
 
-  QueryBuilder<AppSettings, String, QQueryOperations> languageCodeProperty() {
+  QueryBuilder<UserPreferences, bool, QQueryOperations> isLoggedInProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isLoggedIn');
+    });
+  }
+
+  QueryBuilder<UserPreferences, String, QQueryOperations>
+      languageCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'languageCode');
+    });
+  }
+
+  QueryBuilder<UserPreferences, bool, QQueryOperations>
+      prefersDarkModeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'prefersDarkMode');
     });
   }
 }
