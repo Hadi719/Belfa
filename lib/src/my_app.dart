@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'utils/app_translations.dart';
+import 'services/user_preferences_service.dart';
+import 'utils/localization/app_translations.dart';
+import 'utils/route/app_pages.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,9 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Apcha',
-      fallbackLocale: const Locale('en', 'US'),
+      locale: Locale(Get.find<UserPreferencesService>().languageCode.value),
+      fallbackLocale: const Locale('en'),
       translations: AppTraslations(),
-      home: const Placeholder(),
+      initialRoute: '/',
+      getPages: AppPages.pages,
     );
   }
 }
