@@ -7,7 +7,7 @@ class FirstLaunchController extends GetxController {
   final RxInt currentStep = 0.obs;
 
   /// Be carful steps starts at 0
-  final RxInt maxStep = 2.obs;
+  final RxInt maxStep = 0.obs;
 
   late final UserPreferencesService ups;
 
