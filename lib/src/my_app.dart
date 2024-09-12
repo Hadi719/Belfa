@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
 import 'services/user_preferences_service.dart';
@@ -13,6 +14,12 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Apcha',
       locale: Locale(Get.find<UserPreferencesService>().languageCode.value),
+      supportedLocales: const [Locale('en'), Locale('fa')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
       fallbackLocale: const Locale('en'),
       translations: AppTraslations(),
       initialRoute: '/',
