@@ -12,22 +12,22 @@ Logger log = Logger('services.preferences');
 /// Provides access to and manages user preferences stored in the database.
 class UserPreferencesService extends GetxService {
   /// Indicates whether the user has admin privileges.
-  late RxBool hasAdminAccess;
+  late final RxBool hasAdminAccess;
 
   /// Indicates whether the user is logged in.
-  late RxBool isLoggedIn;
+  late final RxBool isLoggedIn;
 
   /// Indicates whether the user prefers dark mode.
-  late RxBool prefersDarkMode;
+  late final RxBool prefersDarkMode;
 
   /// Indicates whether this is the first time the user has opened the app.
-  late RxBool isFirstLaunch;
+  late final RxBool isFirstLaunch;
 
   /// The user's selected language code.
-  late RxString languageCode;
+  late final RxString languageCode;
 
   /// The user's selected country code (can be null).
-  late Rx<String?> countryCode;
+  late final Rx<String?> countryCode;
 
   late final IsarCollection<UserPreferences> _prefsCollection;
 
@@ -98,44 +98,43 @@ class UserPreferencesService extends GetxService {
     });
   }
 
-  /// Updates the user's admin status and persists the change.
-  Future<void> updateUserAdminStatus({required bool hasAdminAccess}) async {
-    log.info('Updating user admin status...');
+  /// Toggles the user's admin status and persists the change.
+  void toggleUserAdminStatus() async {
+    log.info('Toggling user admin status...');
 
-    this.hasAdminAccess.value = hasAdminAccess;
-    unawaited(_savePreferences(hasAdminAccess: hasAdminAccess));
+    hasAdminAccess.toggle();
+    unawaited(_savePreferences(hasAdminAccess: hasAdminAccess.value));
   }
 
-  /// Updates the user's login status and persists the change.
-  Future<void> updateUserLoginStatus({required bool isLoggedIn}) async {
-    log.info('Updating user login status...');
+  /// Toggles the user's login status and persists the change.
+  void toggleUserLoginStatus() {
+    log.info('Toggling user login status...');
 
-    this.isLoggedIn.value = isLoggedIn;
-    unawaited(_savePreferences(isLoggedIn: isLoggedIn));
+    isLoggedIn.toggle();
+    unawaited(_savePreferences(isLoggedIn: isLoggedIn.value));
   }
 
-  /// Updates the user's dark mode preference and persists the change.
-  Future<void> updateUserDarkModePreference(
-      {required bool prefersDarkMode}) async {
-    log.info('Updating user dark mode preference...');
+  /// Toggles the user's dark mode preference and persists the change.
+  void toggleUserDarkModePreference() {
+    log.info('Toggling user dark mode preference...');
 
-    this.prefersDarkMode.value = prefersDarkMode;
-    unawaited(_savePreferences(prefersDarkMode: prefersDarkMode));
+    prefersDarkMode.toggle();
+    unawaited(_savePreferences(prefersDarkMode: prefersDarkMode.value));
   }
 
-  /// Updates the flag indicating the first time the app is launched and persists the change.
-  Future<void> updateUserFirstLaunchUse({required bool isFirstLaunch}) async {
-    log.info('Updating first time app launch status...');
+  /// Toggles the flag indicating the first time the app is launched and persists the change.
+  void toggleUserFirstLaunchUse() {
+    log.info('Toggling first time app launch status...');
 
-    this.isFirstLaunch.value = isFirstLaunch;
-    unawaited(_savePreferences(isFirstLaunch: isFirstLaunch));
+    isFirstLaunch.toggle();
+    unawaited(_savePreferences(isFirstLaunch: isFirstLaunch.value));
   }
 
   /// Updates the user's locale and persists the change.
-  Future<void> updateUserLocale({
+  void updateUserLocale({
     required String languageCode,
     String? countryCode,
-  }) async {
+  }) {
     log.info('Updating user locale...');
 
     this.languageCode.value = languageCode;
