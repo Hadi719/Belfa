@@ -1,5 +1,10 @@
-# Apach
+# Belfa
 
-A Flutter app for rotating savings and credit association. [GetX](https://pub.dev/packages/get) as StateManager and [Isar](https://pub.dev/packages/isar) as Database.
+Belfa is a saving and loan funding management app.
+
+## Features
+
+* [GetX](https://pub.dev/packages/get) as StateManager | Navigation Manager | Dependencies Manager
+* [Isar](https://pub.dev/packages/isar) as Database.
 
 ## Getting Started

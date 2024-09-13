@@ -1,10 +1,12 @@
-import '../translation_keys.dart';
+import 'translation_keys.dart';
 
 /// [EnglishTranslations] class implements [TranslationKeys] to provide English
 /// translations for all defined keys.
 class EnTranslations extends TranslationsKeys {
   @override
-  String get appTitle => 'Apcha';
+  String get appTitle => 'Belfa';
+  @override
+  String get appDescription => 'Benevolent Loan Fund Application';
   @override
   String get admin => 'Admin';
   @override

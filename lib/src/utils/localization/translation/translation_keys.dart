@@ -3,6 +3,7 @@
 /// for the same set of keys.
 abstract class TranslationsKeys {
   String get appTitle;
+  String get appDescription;
   String get admin;
   String get user;
   String get changeLocale;

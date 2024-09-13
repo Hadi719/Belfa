@@ -1,9 +1,11 @@
-import '../translation_keys.dart';
+import 'translation_keys.dart';
 
 // Persian Translations
 class FaTranslations extends TranslationsKeys {
   @override
-  String get appTitle => 'اپچا';
+  String get appTitle => 'بلفا';
+  @override
+  String get appDescription => 'مدیریت پس اندار و وام';
   @override
   String get admin => 'مدیر';
   @override
@@ -11,7 +13,7 @@ class FaTranslations extends TranslationsKeys {
   @override
   String get changeLocale => 'تغییر زبان';
   @override
-  String get darkMode => 'حالت تیره';
+  String get darkMode => 'حالت تاریک';
   @override
   String get lightMode => 'حالت روشن';
   @override

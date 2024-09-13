@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Apcha',
+      title: 'Belfa',
       locale: Locale(Get.find<UserPreferencesService>().languageCode.value),
       supportedLocales: const [Locale('en'), Locale('fa')],
       localizationsDelegates: const [

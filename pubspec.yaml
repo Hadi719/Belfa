@@ -1,6 +1,6 @@
-name: apach
+name: belfa
 description: "A new Flutter project."
-publish_to: "https://github.com/Hadi719/Apach/releases"
+publish_to: "https://github.com/Hadi719/Belfa/releases"
 platforms:
   android:
 
