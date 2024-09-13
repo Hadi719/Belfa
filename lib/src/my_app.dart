@@ -22,6 +22,11 @@ class MyApp extends StatelessWidget {
       ],
       fallbackLocale: const Locale('en'),
       translations: AppTraslations(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: Get.find<UserPreferencesService>().prefersDarkMode.value
+          ? ThemeMode.dark
+          : ThemeMode.light,
       initialRoute: '/',
       getPages: AppPages.pages,
     );

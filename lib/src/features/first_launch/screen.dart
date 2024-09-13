@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_utils/get_utils.dart';
 
-import 'controller.dart';
+import '../../utils/localization/translation/translation_keys.dart';
+import 'widget/my_stepper.dart';
 
 class FirstLaunchScreen extends StatelessWidget {
   const FirstLaunchScreen({super.key});
@@ -9,57 +10,28 @@ class FirstLaunchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: GetBuilder<FirstLaunchController>(
-          builder: (controller) => Stepper(
-            currentStep: controller.currentStep.value,
-            onStepTapped: (step) => controller.currentStep.value = step,
-            onStepContinue: () {
-              if (controller.currentStep.value < controller.maxStep.value) {
-                controller.currentStep.value++;
-              }
-            },
-            onStepCancel: () {
-              if (controller.currentStep.value > 0) {
-                controller.currentStep.value--;
-              }
-            },
-            steps: [
-              _buildLanguageSelectionStep(controller),
-            ],
-          ),
-        ),
+      appBar: AppBar(
+        title: Text(TranslationKey.appTitle.name.tr),
+        centerTitle: true,
+        elevation: 24,
       ),
-    );
-  }
-
-  Step _buildLanguageSelectionStep(FirstLaunchController controller) {
-    return Step(
-      title: Text('language'.tr),
-      content: Column(
+      body: Column(
         children: [
-          _buildLanguageRadio('en', controller),
-          _buildLanguageRadio('fa', controller),
+          SizedBox(height: 64),
+          const MyStepper(),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 64),
+            child: FilledButton.tonal(
+              onPressed: () {
+                // Todo: go to next screen
+                // Get.to()
+              },
+              child: Text(TranslationKey.start.name.tr),
+            ),
+          ),
         ],
       ),
-    );
-  }
-
-  RadioListTile<String> _buildLanguageRadio(
-    String languageCode,
-    FirstLaunchController controller,
-  ) {
-    return RadioListTile<String>(
-      title: Text(languageCode.tr),
-      value: languageCode,
-      groupValue: controller.ups.languageCode.value,
-      onChanged: (newValue) {
-        if (newValue != null) {
-          controller.updateLocale(
-            languageCode: newValue,
-          );
-        }
-      },
     );
   }
 }
