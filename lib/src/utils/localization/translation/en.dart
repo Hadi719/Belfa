@@ -8,11 +8,15 @@ class EnTranslations extends TranslationProvider {
   @override
   String get appDescription => 'Benevolent Loan Fund Application';
   @override
+  String get userStatus => 'User Status';
+  @override
   String get admin => 'Admin';
   @override
   String get user => 'User';
   @override
   String get changeLocale => 'Change Locale';
+  @override
+  String get themeMode => 'Theme Mode';
   @override
   String get darkMode => 'Dark Mode';
   @override
@@ -39,4 +43,8 @@ class EnTranslations extends TranslationProvider {
   String get next => 'Next';
   @override
   String get previous => 'Previous';
+  @override
+  String get start => 'Start';
+  @override
+  String get end => 'End';
 }

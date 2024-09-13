@@ -7,11 +7,15 @@ class FaTranslations extends TranslationProvider {
   @override
   String get appDescription => 'مدیریت پس اندار و وام';
   @override
+  String get userStatus => 'وضعیت کاربر';
+  @override
   String get admin => 'مدیر';
   @override
   String get user => 'کاربر';
   @override
   String get changeLocale => 'تغییر زبان';
+  @override
+  String get themeMode => 'حالت تم';
   @override
   String get darkMode => 'حالت تاریک';
   @override
@@ -38,4 +42,8 @@ class FaTranslations extends TranslationProvider {
   String get next => 'بعدی';
   @override
   String get previous => 'قبلی';
+  @override
+  String get start => 'شروع';
+  @override
+  String get end => 'پایان';
 }

@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 /// Provides a blueprint for classes that offer translations for predefined keys.
 /// Each translation class must implement this interface to ensure consistency.
 ///
@@ -28,11 +26,13 @@ import 'package:get/get.dart';
 abstract class TranslationProvider {
   String get appTitle;
   String get appDescription;
+  String get userStatus;
   String get admin;
   String get user;
-  String get changeLocale;
+  String get themeMode;
   String get darkMode;
   String get lightMode;
+  String get changeLocale;
   String get fa;
   String get en;
   String get ir;
@@ -44,17 +44,21 @@ abstract class TranslationProvider {
   String get skip;
   String get next;
   String get previous;
+  String get start;
+  String get end;
 
   /// Transforms the translation keys and their corresponding values into a map.
   Map<String, String> toMap() {
     return {
       TranslationKey.appTitle.name: appTitle,
       TranslationKey.appDescription.name: appDescription,
+      TranslationKey.userStatus.name: userStatus,
       TranslationKey.admin.name: admin,
       TranslationKey.user.name: user,
-      TranslationKey.changeLocale.name: changeLocale,
+      TranslationKey.themeMode.name: themeMode,
       TranslationKey.darkMode.name: darkMode,
       TranslationKey.lightMode.name: lightMode,
+      TranslationKey.changeLocale.name: changeLocale,
       TranslationKey.fa.name: fa,
       TranslationKey.en.name: en,
       TranslationKey.ir.name: ir,
@@ -66,6 +70,8 @@ abstract class TranslationProvider {
       TranslationKey.skip.name: skip,
       TranslationKey.next.name: next,
       TranslationKey.previous.name: previous,
+      TranslationKey.start.name: start,
+      TranslationKey.end.name: end,
     };
   }
 }
@@ -74,11 +80,13 @@ abstract class TranslationProvider {
 enum TranslationKey {
   appTitle,
   appDescription,
+  userStatus,
   admin,
   user,
-  changeLocale,
+  themeMode,
   darkMode,
   lightMode,
+  changeLocale,
   fa,
   en,
   ir,
@@ -90,10 +98,6 @@ enum TranslationKey {
   skip,
   next,
   previous,
-}
-
-/// Extends the [TranslationKey] enum with a helper method for retrieving translations.
-extension TranslationKeyExtension on TranslationKey {
-  /// Fetches the translated string associated with this enum value.
-  String get translate => name.tr;
+  start,
+  end,
 }
