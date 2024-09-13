@@ -1,7 +1,7 @@
 import 'translation_keys.dart';
 
 // Persian Translations
-class FaTranslations extends TranslationsKeys {
+class FaTranslations extends TranslationProvider {
   @override
   String get appTitle => 'بلفا';
   @override
@@ -29,7 +29,7 @@ class FaTranslations extends TranslationsKeys {
   @override
   String get country => 'کشور';
   @override
-  String get continueBtn => 'ادامه';
+  String get continueString => 'ادامه';
   @override
   String get cancel => 'لغو';
   @override
