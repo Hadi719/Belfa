@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/get_utils.dart';
+import 'package:get/get.dart';
 
 import '../../utils/localization/translation/translation_keys.dart';
+import '../../utils/route/app_pages.dart';
 import 'widget/my_stepper.dart';
 
 class FirstLaunchScreen extends StatelessWidget {
@@ -25,7 +26,7 @@ class FirstLaunchScreen extends StatelessWidget {
             child: FilledButton.tonal(
               onPressed: () {
                 // Todo: go to next screen
-                // Get.to()
+                Get.toNamed(AppRoutes.memberForm);
               },
               child: Text(TranslationKey.start.name.tr),
             ),

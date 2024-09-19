@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       themeMode: Get.find<UserPreferencesService>().prefersDarkMode.value
           ? ThemeMode.dark
           : ThemeMode.light,
-      initialRoute: AppRoutes.groupPerformance,
+      initialRoute: AppRoutes.firstLaunch,
       getPages: AppPages.pages,
     );
   }
