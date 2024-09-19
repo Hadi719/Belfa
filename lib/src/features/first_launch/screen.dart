@@ -17,7 +17,7 @@ class FirstLaunchScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          SizedBox(height: 64),
+          const SizedBox(height: 64),
           const MyStepper(),
           const Spacer(),
           Padding(
