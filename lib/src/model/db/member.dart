@@ -18,7 +18,7 @@ class Member {
   String? lastName;
 
   /// Phone number of the member.
-  String? phoneNumber;
+  int? phoneNumber;
 
   /// Loans taken by this member.
   @Backlink(to: 'member')

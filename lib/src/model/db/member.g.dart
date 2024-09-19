@@ -30,7 +30,7 @@ const MemberSchema = CollectionSchema(
     r'phoneNumber': PropertySchema(
       id: 2,
       name: r'phoneNumber',
-      type: IsarType.string,
+      type: IsarType.long,
     )
   },
   estimateSize: _memberEstimateSize,
@@ -80,12 +80,6 @@ int _memberEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final value = object.phoneNumber;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
   return bytesCount;
 }
 
@@ -97,7 +91,7 @@ void _memberSerialize(
 ) {
   writer.writeString(offsets[0], object.lastName);
   writer.writeString(offsets[1], object.name);
-  writer.writeString(offsets[2], object.phoneNumber);
+  writer.writeLong(offsets[2], object.phoneNumber);
 }
 
 Member _memberDeserialize(
@@ -110,7 +104,7 @@ Member _memberDeserialize(
   object.id = id;
   object.lastName = reader.readStringOrNull(offsets[0]);
   object.name = reader.readStringOrNull(offsets[1]);
-  object.phoneNumber = reader.readStringOrNull(offsets[2]);
+  object.phoneNumber = reader.readLongOrNull(offsets[2]);
   return object;
 }
 
@@ -126,7 +120,7 @@ P _memberDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -582,54 +576,46 @@ extension MemberQueryFilter on QueryBuilder<Member, Member, QFilterCondition> {
   }
 
   QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+      int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'phoneNumber',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberGreaterThan(
-    String? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'phoneNumber',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberLessThan(
-    String? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'phoneNumber',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberBetween(
-    String? lower,
-    String? upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -638,75 +624,6 @@ extension MemberQueryFilter on QueryBuilder<Member, Member, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'phoneNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'phoneNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'phoneNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'phoneNumber',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'phoneNumber',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Member, Member, QAfterFilterCondition> phoneNumberIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'phoneNumber',
-        value: '',
       ));
     });
   }
@@ -931,10 +848,9 @@ extension MemberQueryWhereDistinct on QueryBuilder<Member, Member, QDistinct> {
     });
   }
 
-  QueryBuilder<Member, Member, QDistinct> distinctByPhoneNumber(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Member, Member, QDistinct> distinctByPhoneNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'phoneNumber', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'phoneNumber');
     });
   }
 }
@@ -958,7 +874,7 @@ extension MemberQueryProperty on QueryBuilder<Member, Member, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Member, String?, QQueryOperations> phoneNumberProperty() {
+  QueryBuilder<Member, int?, QQueryOperations> phoneNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'phoneNumber');
     });
