@@ -6,9 +6,9 @@ platforms:
 
 version: 0.0.1+1
 
-# Created with flutter 3.24.1
+# Created with flutter 3.24.1 (Dart 3.5.1) => working: 3.24.3
 environment:
-  sdk: ^3.5.1
+  sdk: ^3.5.3
 
 isar_version: &isar_version 3.1.0+1
 
@@ -17,12 +17,14 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  get: ^4.6.6
+
   logging: ^1.2.0
+  path_provider: ^2.1.4
+  get: ^4.6.6
   isar: *isar_version
   isar_flutter_libs: *isar_version
-  path_provider: ^2.1.4
   file_picker: ^8.1.2
+  fl_chart: ^0.69.0
 
 dev_dependencies:
   flutter_test:
