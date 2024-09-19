@@ -44,11 +44,11 @@ class EnTranslations extends TranslationProvider {
   @override
   String get dashboard => 'Dashboard';
   @override
-  String get delete => '';
+  String get delete => 'Delete';
   @override
   String get done => 'Done';
   @override
-  String get edit => '';
+  String get edit => 'Edit';
   @override
   String get en => 'English';
   @override
@@ -58,15 +58,15 @@ class EnTranslations extends TranslationProvider {
   @override
   String get filter => 'Filter';
   @override
-  String get firstName => '';
+  String get firstName => 'First Name';
   @override
-  String get firstNameHint => '';
+  String get firstNameHint => 'Please enter your first name';
   @override
   String get forgotPassword => 'Forgot Password';
   @override
-  String get groupOverview => '';
+  String get groupOverview => 'Group Overview';
   @override
-  String get groups => '';
+  String get groups => 'Groups';
   @override
   String get help => 'Help';
   @override
@@ -76,9 +76,9 @@ class EnTranslations extends TranslationProvider {
   @override
   String get language => 'Language';
   @override
-  String get lastName => '';
+  String get lastName => 'Last Name';
   @override
-  String get lastNameHint => '';
+  String get lastNameHint => 'Please enter your last name';
   @override
   String get lightMode => 'Light Mode';
   @override
@@ -86,17 +86,17 @@ class EnTranslations extends TranslationProvider {
   @override
   String get logout => 'Logout';
   @override
-  String get member => '';
+  String get member => 'Member';
   @override
-  String get memberForm => '';
+  String get memberForm => 'Member Form';
   @override
-  String get memberOverview => '';
+  String get memberOverview => 'Member Overview';
   @override
-  String get members => '';
+  String get members => 'Members';
   @override
   String get messages => 'Messages';
   @override
-  String get name => '';
+  String get name => 'Name';
   @override
   String get next => 'Next';
   @override
@@ -106,9 +106,9 @@ class EnTranslations extends TranslationProvider {
   @override
   String get ok => 'Ok';
   @override
-  String get phoneNumber => '';
+  String get phoneNumber => 'Phone Number';
   @override
-  String get phoneNumberHint => '';
+  String get phoneNumberHint => 'Please enter your phone number';
   @override
   String get previous => 'Previous';
   @override
@@ -126,9 +126,9 @@ class EnTranslations extends TranslationProvider {
   @override
   String get resetPassword => 'Reset Password';
   @override
-  String get save => '';
+  String get save => 'Save';
   @override
-  String get saveChanges => '';
+  String get saveChanges => 'Save Changes';
   @override
   String get search => 'Search';
   @override
