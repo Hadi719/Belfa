@@ -1,13 +1,12 @@
 import 'package:get/get.dart';
 
-import '../../features/first_launch/bindings.dart';
-import '../../features/first_launch/screen.dart';
-import '../../features/group_overview/binding.dart';
-import '../../features/group_overview/screen.dart';
-import '../../features/member_form/binding.dart';
-import '../../features/member_form/screen.dart';
+import '../../features/first_launch/index.dart';
+import '../../features/group_overview/index.dart';
+import '../../features/member_form/index.dart';
+import '../../features/member_overview/index.dart';
 
 class AppRoutes {
+  static const String initialRoute = memberOverview;
   static const String firstLaunch = '/first-launch';
   static const String groupOverview = '/group-overview';
   static const String memberOverview = '/member-overview';
@@ -26,11 +25,11 @@ class AppPages {
       page: () => const GroupOverviewScreen(),
       binding: GroupOverviewBinding(),
     ),
-    // GetPage(
-    //   name: AppRoutes.memberOverview,
-    //   page: () => const MemberOverviewScreen(),
-    //   binding: MemberOverviewBinding(),
-    // ),
+    GetPage(
+      name: AppRoutes.memberOverview,
+      page: () => const MemberOverviewScreen(),
+      binding: MemberOverviewBinding(),
+    ),
     GetPage(
       name: AppRoutes.memberForm,
       page: () => const MemberFormScreen(),
