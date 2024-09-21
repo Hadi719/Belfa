@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
-import '../../model/db/group.dart';
-import '../../model/db/loan.dart';
+import '../../models/db/group.dart';
+import '../../models/db/loan.dart';
 import '../../services/isar_service.dart';
 import 'model/group_overview_data.dart';
 

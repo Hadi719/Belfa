@@ -6,11 +6,11 @@ import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../model/db/group.dart';
-import '../model/db/installment.dart';
-import '../model/db/loan.dart';
-import '../model/db/member.dart';
-import '../model/user_preferences.dart';
+import '../models/db/group.dart';
+import '../models/db/installment.dart';
+import '../models/db/loan.dart';
+import '../models/db/member.dart';
+import '../models/user_preferences.dart';
 import '../utils/usecase/pick_file_or_directory.dart';
 
 Logger log = Logger('services.isar');

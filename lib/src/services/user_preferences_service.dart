@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../model/user_preferences.dart';
+import '../models/user_preferences.dart';
 import 'isar_service.dart';
 
 Logger log = Logger('services.preferences');
