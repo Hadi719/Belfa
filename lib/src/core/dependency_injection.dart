@@ -22,6 +22,6 @@ void initDependencies() {
 /// of the repository.
 void _registerRepository<T extends Object>(T Function() initializer) {
   if (!Get.isRegistered<T>()) {
-    Get.put<T>(initializer());
+    Get.lazyPut<T>(initializer, fenix: true);
   }
 }
