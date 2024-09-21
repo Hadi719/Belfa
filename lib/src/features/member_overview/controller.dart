@@ -5,64 +5,59 @@ import '../../repositories/member_repository.dart';
 
 /// Controller for managing the member overview screen.
 class MemberOverviewController extends GetxController {
-  /// Observable list of members.
-  final RxList<Member> _members = <Member>[].obs;
-
-  /// Provides access to the list of members.
-  List<Member> get members => _members;
-
-  /// The current search query.
-  String _searchQuery = '';
-
   /// Repository for accessing member data.
   final MemberRepository _repository = Get.find<MemberRepository>();
 
-  /// Initializes the controller by loading the list of members.
+  /// Observable list of all members, used for filtering.
+  final RxList<Member> _allMembers = <Member>[].obs;
+
+  /// Observable list of members displayed in the UI, updated based on search.
+  final members = <Member>[].obs;
+
+  /// The current search query.
+  final searchQuery = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
-    _loadMembers();
-  }
 
-  /// Sets the search query and filters the member list.
-  set searchQuery(String value) {
-    _searchQuery = value.toLowerCase();
-    _filterMembers();
-  }
+    loadMembers();
 
-  /// Loads the full list of members from the repository.
-  Future<void> _loadMembers() async {
-    _members.value = await _repository.getAllMembers();
+    // Set up a listener for search query changes to trigger filtering.
+    debounce(
+      searchQuery,
+      (_) => _filterMembers(),
+      time: const Duration(milliseconds: 300),
+    );
   }
 
   /// Filters the member list based on the current search query.
   void _filterMembers() {
-    if (_searchQuery.isEmpty) {
-      _loadMembers(); // If the search query is empty, reload the full list.
+    if (searchQuery.isEmpty) {
+      members.value = _allMembers;
       return;
     }
 
-    _members.value = _members.where((member) {
+    members.value = _allMembers.where((member) {
       final name = member.name?.toLowerCase() ?? '';
       final lastName = member.lastName?.toLowerCase() ?? '';
       final phoneNumber = member.phoneNumber ?? '';
-      return name.contains(_searchQuery) ||
-          lastName.contains(_searchQuery) ||
-          phoneNumber.contains(_searchQuery);
+      final query = searchQuery.value.toLowerCase();
+      return name.contains(query) ||
+          lastName.contains(query) ||
+          phoneNumber.contains(query);
     }).toList();
+  }
+
+  /// Loads the full list of members from the repository.
+  Future<void> loadMembers() async {
+    _allMembers.value = await _repository.getAllMembers();
+    _filterMembers();
   }
 
   /// Deletes a member from the repository and the member list.
   Future<void> deleteMember(Member member) async {
-    final isDeleted = await _repository.deleteMember(member.id);
-    if (isDeleted) {
-      _members.remove(member);
-    }
-  }
-
-  /// Adds a new member to the repository and refreshes the member list.
-  Future<void> addMember(Member member) async {
-    await _repository.insertMember(member);
-    _loadMembers();
+    await _repository.deleteMember(member.id);
+    await loadMembers();
   }
 }

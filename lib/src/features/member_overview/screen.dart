@@ -14,6 +14,7 @@ class MemberOverviewScreen extends GetView<MemberOverviewController> {
     return Scaffold(
       appBar: AppBar(
         title: Text(TranslationKey.members.name.tr),
+        elevation: 16.0,
       ),
       body: Column(
         children: [
@@ -22,7 +23,7 @@ class MemberOverviewScreen extends GetView<MemberOverviewController> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               onChanged: (value) {
-                controller.searchQuery = value;
+                controller.searchQuery.value = value;
               },
               decoration: InputDecoration(
                 labelText: TranslationKey.search.name.tr,
@@ -37,12 +38,47 @@ class MemberOverviewScreen extends GetView<MemberOverviewController> {
                 itemCount: controller.members.length,
                 itemBuilder: (context, index) {
                   final member = controller.members[index];
-                  return ListTile(
-                    title: Text(member.name ?? ''),
-                    subtitle: Text(member.phoneNumber ?? ''),
-                    onTap: () => Get.toNamed(
-                      AppRoutes.memberForm,
-                      arguments: member,
+                  return Card(
+                    child: ListTile(
+                      title:
+                          Text('${member.name ?? ''} ${member.lastName ?? ''}'),
+                      subtitle: Text(member.phoneNumber ?? ''),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          Get.defaultDialog(
+                            title: TranslationKey.delete.name.tr,
+                            titleStyle: Get.textTheme.titleMedium?.copyWith(
+                              color: Get.theme.colorScheme.error,
+                            ),
+                            content: Wrap(
+                              spacing: 4.0,
+                              alignment: WrapAlignment.center,
+                              children: [
+                                Text(
+                                    '${TranslationKey.confirm.name.tr} ${TranslationKey.delete.name.tr} '),
+                                Text(
+                                  '${member.name ?? ''} ${member.lastName ?? ''}',
+                                  style: Get.textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Get.theme.colorScheme.scrim,
+                                  ),
+                                ),
+                                const Text('?'),
+                              ],
+                            ),
+                            onConfirm: () async {
+                              await controller.deleteMember(member);
+                              Get.back();
+                            },
+                            onCancel: () => Get.back(),
+                          );
+                        },
+                      ),
+                      onTap: () => Get.toNamed(
+                        AppRoutes.memberForm,
+                        arguments: member,
+                      ),
                     ),
                   );
                 },
