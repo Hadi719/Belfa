@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../model/db/group.dart';
+import '../models/db/group.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
