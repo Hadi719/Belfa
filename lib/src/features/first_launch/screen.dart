@@ -26,7 +26,7 @@ class FirstLaunchScreen extends StatelessWidget {
             child: FilledButton.tonal(
               onPressed: () {
                 // Todo: go to next screen
-                Get.toNamed(AppRoutes.memberForm);
+                Get.offNamed(AppRoutes.memberOverview);
               },
               child: Text(TranslationKey.start.name.tr),
             ),
