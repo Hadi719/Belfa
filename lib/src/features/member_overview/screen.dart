@@ -22,12 +22,28 @@ class MemberOverviewScreen extends GetView<MemberOverviewController> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: controller.searchController,
               onChanged: (value) {
                 controller.searchQuery.value = value;
               },
               decoration: InputDecoration(
-                labelText: TranslationKey.search.name.tr,
+                hintText: TranslationKey.search.name.tr,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24.0),
+                ),
+                filled: true,
                 prefixIcon: const Icon(Icons.search),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    controller.searchQuery.value = '';
+                    controller.searchController.clear();
+                  },
+                ),
               ),
             ),
           ),

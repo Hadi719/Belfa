@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../models/db/member.dart';
@@ -17,6 +18,8 @@ class MemberOverviewController extends GetxController {
   /// The current search query.
   final searchQuery = ''.obs;
 
+  final TextEditingController searchController = TextEditingController();
+
   @override
   void onInit() {
     super.onInit();
@@ -29,6 +32,12 @@ class MemberOverviewController extends GetxController {
       (_) => _filterMembers(),
       time: const Duration(milliseconds: 300),
     );
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
   }
 
   /// Filters the member list based on the current search query.
