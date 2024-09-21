@@ -18,6 +18,7 @@ class MemberFormScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
+        elevation: 16.0,
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -66,8 +67,9 @@ class MemberFormScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 32),
+              // Save Button
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (controller.formKey.currentState!.validate()) {
                     controller.saveMember();
                     Get.back();
@@ -76,6 +78,7 @@ class MemberFormScreen extends StatelessWidget {
                 child: Text(TranslationKey.save.name.tr),
               ),
               const SizedBox(height: 16),
+              // Cancel button
               ElevatedButton(
                 onPressed: () {
                   Get.back();
@@ -94,12 +97,17 @@ class MemberFormScreen extends StatelessWidget {
                       onConfirm: () async {
                         await controller.deleteMember();
                         Get.back();
+                        Get.back();
                       },
-                      onCancel: () => Get.back(),
+                      onCancel: () {},
+                      textConfirm: TranslationKey.confirm.name.tr,
+                      textCancel: TranslationKey.cancel.name.tr,
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Get.theme.colorScheme.error,
+                    foregroundColor: Get.theme.colorScheme.onError,
+                    elevation: 8.0,
                   ),
                   child: Text(TranslationKey.delete.name.tr),
                 ),

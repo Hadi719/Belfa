@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../models/db/member.dart';
 import '../../repositories/member_repository.dart';
+import '../member_overview/controller.dart';
 
 class MemberFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -46,6 +47,7 @@ class MemberFormController extends GetxController {
 
     if (_member != null) {
       await _repository.insertMember(_member!);
+      await _updateMemberOverview();
     }
   }
 
@@ -54,5 +56,12 @@ class MemberFormController extends GetxController {
       return;
     }
     await _repository.deleteMember(_member!.id);
+    await _updateMemberOverview();
+  }
+
+  Future<void> _updateMemberOverview() async {
+    if (Get.isRegistered<MemberOverviewController>()) {
+      await Get.find<MemberOverviewController>().loadMembers();
+    }
   }
 }
