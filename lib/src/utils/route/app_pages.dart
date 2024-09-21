@@ -6,7 +6,7 @@ import '../../features/member_form/index.dart';
 import '../../features/member_overview/index.dart';
 
 class AppRoutes {
-  static const String initialRoute = memberOverview;
+  static const String initialRoute = firstLaunch;
   static const String firstLaunch = '/first-launch';
   static const String groupOverview = '/group-overview';
   static const String memberOverview = '/member-overview';
