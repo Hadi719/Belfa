@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
-import 'app_log_handler.dart';
+import 'src/core/dependency_injection.dart';
 import 'src/my_app.dart';
 import 'src/services/services.dart';
+import 'src/utils/app_log_handler.dart';
 
-void main() async {
-  // Ensure binding is initialized for native plugins.
+Future<void> main() async {
+  // Ensure Flutter bindings are initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize and configure logging.
+  // Initialize logging.
   final appLogHandler = await AppLogHandler().init();
   await appLogHandler.configureLogging();
 
   // Initialize app services.
   await initServices();
+
+  // Initialize app dependencies.
+  initDependencies();
 
   // Run the application.
   runApp(const MyApp());
