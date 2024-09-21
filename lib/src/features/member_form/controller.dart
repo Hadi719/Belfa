@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 
-import '../../model/db/member.dart';
-import '../../services/isar_service.dart';
+import '../../models/db/member.dart';
+import '../../repositories/member_repository.dart';
 
 class MemberFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -11,13 +10,15 @@ class MemberFormController extends GetxController {
   final lastNameController = TextEditingController();
   final phoneNumberController = TextEditingController();
   Member? _member;
-  late final Isar _isar;
+
+  final MemberRepository _repository = Get.find<MemberRepository>();
+
+  MemberFormController();
 
   @override
   void onInit() {
     super.onInit();
     _member = Get.arguments;
-    _isar = Get.find<IsarService>().isar;
     _initializeFormFields();
   }
 
@@ -44,9 +45,7 @@ class MemberFormController extends GetxController {
       ..phoneNumber = phoneNumberController.text;
 
     if (_member != null) {
-      await _isar.writeTxn(() async {
-        await _isar.members.put(_member!);
-      });
+      await _repository.insertMember(_member!);
     }
   }
 
@@ -54,8 +53,6 @@ class MemberFormController extends GetxController {
     if (_member == null) {
       return;
     }
-    await _isar.writeTxn(() async {
-      await _isar.members.delete(_member!.id);
-    });
+    await _repository.deleteMember(_member!.id);
   }
 }

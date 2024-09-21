@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../model/db/member.dart';
+import '../../models/db/member.dart';
 import '../../utils/localization/translation/translation_keys.dart';
 import 'controller.dart';
 
