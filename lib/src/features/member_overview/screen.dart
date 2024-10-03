@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 
 import '../../utils/localization/translation/translation_keys.dart';
 import '../../utils/route/app_pages.dart';
+import '../../utils/widget/bf_app_bar.dart';
+import '../../utils/widget/bf_search_widget.dart';
 import 'controller.dart';
 
 /// Widget displaying a list of members.
@@ -12,40 +14,19 @@ class MemberOverviewScreen extends GetView<MemberOverviewController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(TranslationKey.members.name.tr),
-        elevation: 16.0,
-      ),
+      appBar: bfAppBar(appBarTitle: TranslationKey.members.name.tr),
       body: Column(
         children: [
-          // Search bar
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: controller.searchController,
-              onChanged: (value) {
-                controller.searchQuery.value = value;
-              },
-              decoration: InputDecoration(
-                hintText: TranslationKey.search.name.tr,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-                filled: true,
-                prefixIcon: const Icon(Icons.search),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12.0,
-                ),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    controller.searchQuery.value = '';
-                    controller.searchController.clear();
-                  },
-                ),
-              ),
-            ),
+          BfSearchWidget(
+            controller: controller.searchController,
+            onChanged: (value) {
+              controller.searchQuery.value = value;
+            },
+            onPressedClear: () {
+              controller.searchQuery.value = '';
+              controller.searchController.clear();
+              controller.loadMembers();
+            },
           ),
           // Member list
           Expanded(

@@ -1,153 +1,90 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../utils/localization/translation/translation_keys.dart';
+import '../../utils/route/app_pages.dart';
+import '../../utils/widget/bf_app_bar.dart';
+import '../../utils/widget/bf_search_widget.dart';
 import 'controller.dart';
 
-class GroupOverviewScreen extends StatelessWidget {
+class GroupOverviewScreen extends GetView<GroupOverviewController> {
   const GroupOverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Group Performance'),
+      appBar: bfAppBar(appBarTitle: TranslationKey.groups.name.tr),
+      body: Column(
+        children: [
+          BfSearchWidget(
+            controller: controller.searchController,
+            onChanged: (value) {
+              controller.searchQuery.value = value;
+            },
+            onPressedClear: () {
+              controller.searchQuery.value = '';
+              controller.searchController.clear();
+              controller.loadGroups();
+            },
+          ),
+          // Group list
+          Expanded(
+            child: Obx(
+              () => ListView.builder(
+                itemCount: controller.groups.length,
+                itemBuilder: (context, index) {
+                  final group = controller.groups[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(group.name),
+                      subtitle: Text(group.member.length.toString()),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          Get.defaultDialog(
+                            title: TranslationKey.delete.name.tr,
+                            titleStyle: Get.textTheme.titleMedium?.copyWith(
+                              color: Get.theme.colorScheme.error,
+                            ),
+                            content: Wrap(
+                              spacing: 4.0,
+                              alignment: WrapAlignment.center,
+                              children: [
+                                Text(
+                                    '${TranslationKey.confirm.name.tr} ${TranslationKey.delete.name.tr} '),
+                                Text(
+                                  group.name,
+                                  style: Get.textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Get.theme.colorScheme.scrim,
+                                  ),
+                                ),
+                                const Text('?'),
+                              ],
+                            ),
+                            onConfirm: () async {
+                              await controller.deleteGroup(group);
+                              Get.back();
+                            },
+                            onCancel: () => Get.back(),
+                          );
+                        },
+                      ),
+                      onTap: () => Get.toNamed(
+                        AppRoutes.groupForm,
+                        arguments: group,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: GetBuilder<GroupOverviewController>(
-          builder: (controller) {
-            return Column(
-              children: [
-                // Active Loans per Groups Chart
-                Expanded(
-                  child: BarChart(
-                    BarChartData(
-                      alignment: BarChartAlignment.spaceAround,
-                      barTouchData: BarTouchData(
-                        enabled: false,
-                      ),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (double value, TitleMeta meta) {
-                              final index = value.toInt();
-                              if (index >= 0 &&
-                                  index < controller.groupOverviewData.length) {
-                                return SideTitleWidget(
-                                  axisSide: meta.axisSide,
-                                  space: 16.0,
-                                  child: RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Text(
-                                      controller
-                                          .groupOverviewData[index].groupName,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return const SizedBox.shrink();
-                              }
-                            },
-                          ),
-                        ),
-                        leftTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: true)),
-                        topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                      ),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      barGroups: controller.groupOverviewData
-                          .asMap()
-                          .entries
-                          .map(
-                            (entry) => BarChartGroupData(
-                              x: entry.key,
-                              barRods: [
-                                BarChartRodData(
-                                  toY: entry.value.activeLoanCount.toDouble(),
-                                  width: 20,
-                                  color: Colors.blue,
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Average Loan Size by Group Chart
-                Expanded(
-                  child: BarChart(
-                    BarChartData(
-                      alignment: BarChartAlignment.spaceAround,
-                      barTouchData: BarTouchData(
-                        enabled: false,
-                      ),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (double value, TitleMeta meta) {
-                              final index = value.toInt();
-                              if (index >= 0 &&
-                                  index < controller.groupOverviewData.length) {
-                                return SideTitleWidget(
-                                  axisSide: meta.axisSide,
-                                  space: 16.0,
-                                  child: RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Text(
-                                      controller
-                                          .groupOverviewData[index].groupName,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return const SizedBox.shrink();
-                              }
-                            },
-                          ),
-                        ),
-                        leftTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: true)),
-                        topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                      ),
-                      borderData: FlBorderData(show: false),
-                      barGroups: controller.groupOverviewData
-                          .asMap()
-                          .entries
-                          .map(
-                            (entry) => BarChartGroupData(
-                              x: entry.key,
-                              barRods: [
-                                BarChartRodData(
-                                  toY: entry.value.averageLoanSize.toDouble(),
-                                  width: 20,
-                                  color: Colors.green,
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.toNamed(AppRoutes.groupForm),
+        child: const Icon(Icons.add),
       ),
     );
   }

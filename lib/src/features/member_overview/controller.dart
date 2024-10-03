@@ -47,11 +47,12 @@ class MemberOverviewController extends GetxController {
       return;
     }
 
+    final query = searchQuery.value.toLowerCase();
+
     members.value = _allMembers.where((member) {
       final name = member.name?.toLowerCase() ?? '';
       final lastName = member.lastName?.toLowerCase() ?? '';
       final phoneNumber = member.phoneNumber ?? '';
-      final query = searchQuery.value.toLowerCase();
       return name.contains(query) ||
           lastName.contains(query) ||
           phoneNumber.contains(query);
