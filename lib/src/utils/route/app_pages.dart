@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../features/first_launch/index.dart';
+import '../../features/group_form/index.dart';
 import '../../features/group_overview/index.dart';
 import '../../features/member_form/index.dart';
 import '../../features/member_overview/index.dart';
@@ -9,6 +10,7 @@ class AppRoutes {
   static const String initialRoute = firstLaunch;
   static const String firstLaunch = '/first-launch';
   static const String groupOverview = '/group-overview';
+  static const String groupForm = '/group-form';
   static const String memberOverview = '/member-overview';
   static const String memberForm = '/member-form';
 }
@@ -24,6 +26,11 @@ class AppPages {
       name: AppRoutes.groupOverview,
       page: () => const GroupOverviewScreen(),
       binding: GroupOverviewBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.groupForm,
+      page: () => const GroupFormScreen(),
+      binding: GroupFormBinding(),
     ),
     GetPage(
       name: AppRoutes.memberOverview,
