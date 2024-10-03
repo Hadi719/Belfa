@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../utils/localization/translation/translation_keys.dart';
 import '../../utils/route/app_pages.dart';
-import 'widget/my_stepper.dart';
+import 'widget/bf_stepper.dart';
 
 class FirstLaunchScreen extends StatelessWidget {
   const FirstLaunchScreen({super.key});
@@ -19,7 +19,7 @@ class FirstLaunchScreen extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 64),
-          const MyStepper(),
+          const BfStepper(),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 64),
