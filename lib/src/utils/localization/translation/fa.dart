@@ -5,6 +5,8 @@ class FaTranslations extends TranslationProvider {
   @override
   String get about => 'درباره ما';
   @override
+  String get account => 'حساب';
+  @override
   String get add => 'افزودن';
   @override
   String get admin => 'مدیر';
@@ -19,9 +21,13 @@ class FaTranslations extends TranslationProvider {
   @override
   String get back => 'بازگشت';
   @override
+  String get bank => 'بانک';
+  @override
   String get calendar => 'تقویم';
   @override
   String get cancel => 'لغو';
+  @override
+  String get card => 'کارت';
   @override
   String get changeLocale => 'تغییر زبان';
   @override
@@ -63,6 +69,8 @@ class FaTranslations extends TranslationProvider {
   @override
   String get forgotPassword => 'رمز عبور را فراموش کرده اید؟';
   @override
+  String get group => 'گروه';
+  @override
   String get groupOverview => 'نمای کلی گروه';
   @override
   String get groups => 'گروه‌ها';
@@ -102,6 +110,8 @@ class FaTranslations extends TranslationProvider {
   String get no => 'خیر';
   @override
   String get notifications => 'اعلان‌ها';
+  @override
+  String get number => 'شماره';
   @override
   String get ok => 'باشه';
   @override

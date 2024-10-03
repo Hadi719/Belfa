@@ -6,6 +6,8 @@ class EnTranslations extends TranslationProvider {
   @override
   String get about => 'About';
   @override
+  String get account => 'Account';
+  @override
   String get add => 'Add';
   @override
   String get admin => 'Admin';
@@ -18,11 +20,15 @@ class EnTranslations extends TranslationProvider {
   @override
   String get appTitle => 'Belfa';
   @override
-  String get back => '';
+  String get back => 'Back';
+  @override
+  String get bank => 'Bank';
   @override
   String get calendar => 'Calendar';
   @override
   String get cancel => 'Cancel';
+  @override
+  String get card => 'Card';
   @override
   String get changeLocale => 'Change Locale';
   @override
@@ -64,6 +70,8 @@ class EnTranslations extends TranslationProvider {
   @override
   String get forgotPassword => 'Forgot Password';
   @override
+  String get group => 'Group';
+  @override
   String get groupOverview => 'Group Overview';
   @override
   String get groups => 'Groups';
@@ -103,6 +111,8 @@ class EnTranslations extends TranslationProvider {
   String get no => 'No';
   @override
   String get notifications => 'Notifications';
+  @override
+  String get number => 'Number';
   @override
   String get ok => 'Ok';
   @override

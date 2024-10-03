@@ -1,6 +1,7 @@
 /// Enumerates the various translatable strings used within the application.
 enum TranslationKey {
   about,
+  account,
   add,
   admin,
   analytics,
@@ -8,8 +9,10 @@ enum TranslationKey {
   apply,
   appTitle,
   back,
+  bank,
   calendar,
   cancel,
+  card,
   changeLocale,
   choose,
   clear,
@@ -30,6 +33,7 @@ enum TranslationKey {
   firstName,
   firstNameHint,
   forgotPassword,
+  group,
   groupOverview,
   groups,
   help,
@@ -50,6 +54,7 @@ enum TranslationKey {
   next,
   no,
   notifications,
+  number,
   ok,
   phoneNumber,
   phoneNumberHint,
@@ -107,6 +112,7 @@ enum TranslationKey {
 ///   4. Finally, provide the translation for the new key in each language-specific implementation.
 abstract class TranslationProvider {
   String get about;
+  String get account;
   String get add;
   String get admin;
   String get analytics;
@@ -114,8 +120,10 @@ abstract class TranslationProvider {
   String get apply;
   String get appTitle;
   String get back;
+  String get bank;
   String get calendar;
   String get cancel;
+  String get card;
   String get changeLocale;
   String get choose;
   String get clear;
@@ -136,6 +144,7 @@ abstract class TranslationProvider {
   String get firstName;
   String get firstNameHint;
   String get forgotPassword;
+  String get group;
   String get groupOverview;
   String get groups;
   String get help;
@@ -156,6 +165,7 @@ abstract class TranslationProvider {
   String get next;
   String get no;
   String get notifications;
+  String get number;
   String get ok;
   String get phoneNumber;
   String get phoneNumberHint;
@@ -189,6 +199,7 @@ abstract class TranslationProvider {
   Map<String, String> toMap() {
     return {
       TranslationKey.about.name: about,
+      TranslationKey.account.name: account,
       TranslationKey.add.name: add,
       TranslationKey.admin.name: admin,
       TranslationKey.analytics.name: analytics,
@@ -196,8 +207,10 @@ abstract class TranslationProvider {
       TranslationKey.apply.name: apply,
       TranslationKey.appTitle.name: appTitle,
       TranslationKey.back.name: back,
+      TranslationKey.bank.name: bank,
       TranslationKey.calendar.name: calendar,
       TranslationKey.cancel.name: cancel,
+      TranslationKey.card.name: card,
       TranslationKey.changeLocale.name: changeLocale,
       TranslationKey.choose.name: choose,
       TranslationKey.clear.name: clear,
@@ -218,6 +231,7 @@ abstract class TranslationProvider {
       TranslationKey.firstName.name: firstName,
       TranslationKey.firstNameHint.name: firstNameHint,
       TranslationKey.forgotPassword.name: forgotPassword,
+      TranslationKey.group.name: group,
       TranslationKey.groupOverview.name: groupOverview,
       TranslationKey.groups.name: groups,
       TranslationKey.help.name: help,
@@ -238,6 +252,7 @@ abstract class TranslationProvider {
       TranslationKey.next.name: next,
       TranslationKey.no.name: no,
       TranslationKey.notifications.name: notifications,
+      TranslationKey.number.name: number,
       TranslationKey.ok.name: ok,
       TranslationKey.phoneNumber.name: phoneNumber,
       TranslationKey.phoneNumberHint.name: phoneNumberHint,
