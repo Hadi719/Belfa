@@ -24,14 +24,14 @@ class Group {
   int? bankAccountNumber;
 
   /// Members belonging to this group.
-  final member = IsarLinks<Member>();
+  final IsarLinks<Member> members = IsarLinks<Member>();
 
   // Embed LoanTurn within Group
-  final List<LoanTurn> loanTurns = [];
+  List<LoanTurn> loanTurns = const <LoanTurn>[];
 
   /// Loans associated with this group.
   @Backlink(to: 'group')
-  final loans = IsarLinks<Loan>();
+  final IsarLinks<Loan> loans = IsarLinks<Loan>();
 }
 
 /// Represents a loan turn assigned to a member within a group.

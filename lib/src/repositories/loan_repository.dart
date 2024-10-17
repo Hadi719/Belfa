@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../models/db/loan.dart';
+import '../models/collections/loan.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
@@ -11,18 +11,18 @@ Logger log = Logger('repository.loan');
 /// Repository for managing [Loan] entities in the Isar database.
 class LoanRepository {
   /// Isar collection for accessing [Loan] entities.
-  late IsarCollection<Loan> loans;
+  late IsarCollection<Loan> collection;
 
   late Isar _isar;
 
   /// Initializes the repository by obtaining a reference to the [Isar] instance
-  /// and the [loans] collection.
+  /// and the [collection] collection.
   LoanRepository init() {
     log.info('Initializing LoanRepository...');
 
     try {
       _isar = Get.find<IsarService>().isar;
-      loans = _isar.loans;
+      collection = _isar.loans;
 
       log.info('LoanRepository initialized.');
     } catch (e) {
@@ -36,7 +36,7 @@ class LoanRepository {
   /// Inserts or updates a [Loan] entity.
   Future<Id> insertLoan(Loan loan) async {
     return executeAndLog<Id>(
-      method: () => _isar.writeTxn(() => loans.put(loan)),
+      method: () => _isar.writeTxnSync(() => collection.putSync(loan)),
       logger: log,
       taskDescription: 'Insert loan',
       extraMessageBuilder: (id) => 'Inserted loan with ID: $id.',
@@ -46,7 +46,7 @@ class LoanRepository {
   /// Inserts or updates a list of [Loan] entities.
   Future<List<Id>> insertLoans(List<Loan> loans) async {
     return executeAndLog<List<Id>>(
-      method: () => _isar.writeTxn(() => this.loans.putAll(loans)),
+      method: () => _isar.writeTxnSync(() => collection.putAllSync(loans)),
       logger: log,
       taskDescription: 'Insert loans',
       extraMessageBuilder: (ids) =>
@@ -57,7 +57,7 @@ class LoanRepository {
   /// Deletes a [Loan] entity by its ID.
   Future<bool> deleteLoan(Id id) async {
     return executeAndLog<bool>(
-      method: () => _isar.writeTxn(() => loans.delete(id)),
+      method: () => _isar.writeTxn(() => collection.delete(id)),
       logger: log,
       taskDescription: 'Delete loan',
       extraMessageBuilder: (success) => success
@@ -69,7 +69,7 @@ class LoanRepository {
   /// Deletes multiple [Loan] entities by their IDs.
   Future<int> deleteLoans(List<Id> ids) async {
     return executeAndLog<int>(
-      method: () => _isar.writeTxn(() => loans.deleteAll(ids)),
+      method: () => _isar.writeTxn(() => collection.deleteAll(ids)),
       logger: log,
       taskDescription: 'Delete loans',
       extraMessageBuilder: (count) =>
@@ -80,7 +80,7 @@ class LoanRepository {
   /// Finds a [Loan] entity by its ID.
   Future<Loan?> findLoanById(Id id) async {
     return executeAndLog<Loan?>(
-      method: () => loans.get(id),
+      method: () => collection.get(id),
       logger: log,
       taskDescription: 'Find loan by ID',
     );
@@ -89,7 +89,7 @@ class LoanRepository {
   /// Retrieves all [Loan] entities from the database.
   Future<List<Loan>> getAllLoans() async {
     return executeAndLog<List<Loan>>(
-      method: () => loans.where().findAll(),
+      method: () => collection.where().findAll(),
       logger: log,
       taskDescription: 'Get all loans',
       extraMessageBuilder: (loans) => 'Retrieved ${loans.length} loans.',

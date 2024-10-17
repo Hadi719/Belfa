@@ -37,13 +37,13 @@ class Loan {
   LoanStatus loanStatus = LoanStatus.active;
 
   /// The member who took the loan.
-  final member = IsarLink<Member>();
+  final IsarLink<Member> member = IsarLink<Member>();
 
   /// The group to which the loan is associated.
-  final group = IsarLink<Group>();
+  final IsarLink<Group> group = IsarLink<Group>();
 
   /// The installments associated with this loan.
-  final installments = IsarLinks<Installment>();
+  final IsarLinks<Installment> installments = IsarLinks<Installment>();
 }
 
 /// Represents the frequency of loan repayments.

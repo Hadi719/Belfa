@@ -51,9 +51,9 @@ const GroupSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'member': LinkSchema(
-      id: 2614838594148017922,
-      name: r'member',
+    r'members': LinkSchema(
+      id: -1731925964168662176,
+      name: r'members',
       target: r'Member',
       single: false,
     ),
@@ -118,6 +118,13 @@ Group _groupDeserialize(
   object.bankAccountNumber = reader.readLongOrNull(offsets[0]);
   object.bankCardNumber = reader.readLongOrNull(offsets[1]);
   object.id = id;
+  object.loanTurns = reader.readObjectList<LoanTurn>(
+        offsets[2],
+        LoanTurnSchema.deserialize,
+        allOffsets,
+        LoanTurn(),
+      ) ??
+      [];
   object.name = reader.readString(offsets[3]);
   object.startDate = reader.readDateTime(offsets[4]);
   return object;
@@ -156,12 +163,12 @@ Id _groupGetId(Group object) {
 }
 
 List<IsarLinkBase<dynamic>> _groupGetLinks(Group object) {
-  return [object.member, object.loans];
+  return [object.members, object.loans];
 }
 
 void _groupAttach(IsarCollection<dynamic> col, Id id, Group object) {
   object.id = id;
-  object.member.attach(col, col.isar.collection<Member>(), r'member', id);
+  object.members.attach(col, col.isar.collection<Member>(), r'members', id);
   object.loans.attach(col, col.isar.collection<Loan>(), r'loans', id);
 }
 
@@ -709,51 +716,51 @@ extension GroupQueryObject on QueryBuilder<Group, Group, QFilterCondition> {
 }
 
 extension GroupQueryLinks on QueryBuilder<Group, Group, QFilterCondition> {
-  QueryBuilder<Group, Group, QAfterFilterCondition> member(
+  QueryBuilder<Group, Group, QAfterFilterCondition> members(
       FilterQuery<Member> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'member');
+      return query.link(q, r'members');
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> memberLengthEqualTo(
+  QueryBuilder<Group, Group, QAfterFilterCondition> membersLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'member', length, true, length, true);
+      return query.linkLength(r'members', length, true, length, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> memberIsEmpty() {
+  QueryBuilder<Group, Group, QAfterFilterCondition> membersIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'member', 0, true, 0, true);
+      return query.linkLength(r'members', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> memberIsNotEmpty() {
+  QueryBuilder<Group, Group, QAfterFilterCondition> membersIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'member', 0, false, 999999, true);
+      return query.linkLength(r'members', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> memberLengthLessThan(
+  QueryBuilder<Group, Group, QAfterFilterCondition> membersLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'member', 0, true, length, include);
+      return query.linkLength(r'members', 0, true, length, include);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> memberLengthGreaterThan(
+  QueryBuilder<Group, Group, QAfterFilterCondition> membersLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'member', length, include, 999999, true);
+      return query.linkLength(r'members', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Group, Group, QAfterFilterCondition> memberLengthBetween(
+  QueryBuilder<Group, Group, QAfterFilterCondition> membersLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -761,7 +768,7 @@ extension GroupQueryLinks on QueryBuilder<Group, Group, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'member', lower, includeLower, upper, includeUpper);
+          r'members', lower, includeLower, upper, includeUpper);
     });
   }
 

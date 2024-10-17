@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../models/db/installment.dart';
+import '../models/collections/installment.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
@@ -11,18 +11,18 @@ Logger log = Logger('repository.installment');
 /// Repository for managing [Installment] entities in the Isar database.
 class InstallmentRepository {
   /// Isar collection for accessing [Installment] entities.
-  late IsarCollection<Installment> installments;
+  late IsarCollection<Installment> collection;
 
   late Isar _isar;
 
   /// Initializes the repository by obtaining a reference to the [Isar] instance
-  /// and the [installments] collection.
+  /// and the [collection] collection.
   InstallmentRepository init() {
     log.info('Initializing InstallmentRepository...');
 
     try {
       _isar = Get.find<IsarService>().isar;
-      installments = _isar.installments;
+      collection = _isar.installments;
 
       log.info('InstallmentRepository initialized.');
     } catch (e) {
@@ -36,7 +36,7 @@ class InstallmentRepository {
   /// Inserts or updates an [Installment] entity.
   Future<Id> insertInstallment(Installment installment) async {
     return executeAndLog<Id>(
-      method: () => _isar.writeTxn(() => installments.put(installment)),
+      method: () => _isar.writeTxnSync(() => collection.putSync(installment)),
       logger: log,
       taskDescription: 'Insert installment',
       extraMessageBuilder: (id) => 'Inserted installment with ID: $id.',
@@ -47,7 +47,7 @@ class InstallmentRepository {
   Future<List<Id>> insertInstallments(List<Installment> installments) async {
     return executeAndLog<List<Id>>(
       method: () =>
-          _isar.writeTxn(() => this.installments.putAll(installments)),
+          _isar.writeTxnSync(() => collection.putAllSync(installments)),
       logger: log,
       taskDescription: 'Insert installments',
       extraMessageBuilder: (ids) =>
@@ -58,7 +58,7 @@ class InstallmentRepository {
   /// Deletes an [Installment] entity by its ID.
   Future<bool> deleteInstallment(Id id) async {
     return executeAndLog<bool>(
-      method: () => _isar.writeTxn(() => installments.delete(id)),
+      method: () => _isar.writeTxn(() => collection.delete(id)),
       logger: log,
       taskDescription: 'Delete installment',
       extraMessageBuilder: (success) => success
@@ -70,7 +70,7 @@ class InstallmentRepository {
   /// Deletes multiple [Installment] entities by their IDs.
   Future<int> deleteInstallments(List<Id> ids) async {
     return executeAndLog<int>(
-      method: () => _isar.writeTxn(() => installments.deleteAll(ids)),
+      method: () => _isar.writeTxn(() => collection.deleteAll(ids)),
       logger: log,
       taskDescription: 'Delete installments',
       extraMessageBuilder: (count) =>
@@ -81,7 +81,7 @@ class InstallmentRepository {
   /// Finds an [Installment] entity by its ID.
   Future<Installment?> findInstallmentById(Id id) async {
     return executeAndLog<Installment?>(
-      method: () => installments.get(id),
+      method: () => collection.get(id),
       logger: log,
       taskDescription: 'Find installment by ID',
     );
@@ -90,7 +90,7 @@ class InstallmentRepository {
   /// Retrieves all [Installment] entities from the database.
   Future<List<Installment>> getAllInstallments() async {
     return executeAndLog<List<Installment>>(
-      method: () => installments.where().findAll(),
+      method: () => collection.where().findAll(),
       logger: log,
       taskDescription: 'Get all installments',
       extraMessageBuilder: (installments) =>

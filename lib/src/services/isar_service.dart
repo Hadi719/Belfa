@@ -6,15 +6,15 @@ import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../models/db/group.dart';
-import '../models/db/installment.dart';
-import '../models/db/loan.dart';
-import '../models/db/member.dart';
+import '../models/collections/group.dart';
+import '../models/collections/installment.dart';
+import '../models/collections/loan.dart';
+import '../models/collections/member.dart';
 import '../models/user_preferences.dart';
 import '../utils/usecase/pick_file_or_directory.dart';
 
 Logger log = Logger('services.isar');
-const String isarDbName = 'Apcha_isar_database';
+const String isarDbName = 'Belfa_isar_database';
 
 /// Service for managing the Isar database.
 class IsarService extends GetxService {
@@ -28,20 +28,23 @@ class IsarService extends GetxService {
     log.info('Initializing Isar database...');
 
     try {
-      final dir = await getApplicationDocumentsDirectory();
-      isar = await Isar.open(
-        [
-          GroupSchema,
-          MemberSchema,
-          LoanSchema,
-          InstallmentSchema,
-          UserPreferencesSchema,
-        ],
-        directory: dir.path,
-        name: isarDbName,
-      );
+      if (Isar.instanceNames.isEmpty) {
+        final dir = await getApplicationDocumentsDirectory();
+        isar = await Isar.open(
+          [
+            GroupSchema,
+            MemberSchema,
+            LoanSchema,
+            InstallmentSchema,
+            UserPreferencesSchema,
+          ],
+          directory: dir.path,
+          name: isarDbName,
+        );
+        log.info('Isar database initialized.');
+      }
 
-      log.info('Isar database initialized.');
+      log.info('Isar database already initialized.');
     } catch (e) {
       log.severe('Failed to initialize Isar database: $e', [e]);
       rethrow;

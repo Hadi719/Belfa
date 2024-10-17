@@ -48,11 +48,11 @@ const MemberSchema = CollectionSchema(
       linkName: r'member',
     ),
     r'groups': LinkSchema(
-      id: -5330085195732701086,
+      id: 8495280460585279067,
       name: r'groups',
       target: r'Group',
       single: false,
-      linkName: r'member',
+      linkName: r'members',
     )
   },
   embeddedSchemas: {},

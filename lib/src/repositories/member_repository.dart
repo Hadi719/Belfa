@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../models/db/member.dart';
+import '../models/collections/member.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
 
@@ -11,7 +11,7 @@ Logger log = Logger('repository.member');
 /// Repository for managing [Member] entities in the Isar database.
 class MemberRepository {
   /// Isar collection for accessing [Member] entities.
-  late IsarCollection<Member> members;
+  late IsarCollection<Member> collection;
 
   late Isar _isar;
 
@@ -22,7 +22,7 @@ class MemberRepository {
 
     try {
       _isar = Get.find<IsarService>().isar;
-      members = _isar.members;
+      collection = _isar.members;
 
       log.info('MemberRepository initialized.');
     } catch (e) {
@@ -36,7 +36,7 @@ class MemberRepository {
   /// Inserts or updates a [Member] entity.
   Future<Id> insertMember(Member member) async {
     return executeAndLog<Id>(
-      method: () => _isar.writeTxn(() => members.put(member)),
+      method: () => _isar.writeTxnSync(() => collection.putSync(member)),
       logger: log,
       taskDescription: 'Insert member',
       extraMessageBuilder: (id) =>
@@ -47,7 +47,7 @@ class MemberRepository {
   /// Inserts or updates a list of [Member] entities.
   Future<List<Id>> insertMembers(List<Member> members) async {
     return executeAndLog<List<Id>>(
-      method: () => _isar.writeTxn(() => this.members.putAll(members)),
+      method: () => _isar.writeTxnSync(() => collection.putAllSync(members)),
       logger: log,
       taskDescription: 'Insert members',
       extraMessageBuilder: (ids) =>
@@ -58,7 +58,7 @@ class MemberRepository {
   /// Deletes a [Member] entity by its ID.
   Future<bool> deleteMember(Id id) async {
     return executeAndLog<bool>(
-      method: () => _isar.writeTxn(() => members.delete(id)),
+      method: () => _isar.writeTxn(() => collection.delete(id)),
       logger: log,
       taskDescription: 'Delete member',
       extraMessageBuilder: (success) => success
@@ -70,7 +70,7 @@ class MemberRepository {
   /// Deletes multiple [Member] entities by their IDs.
   Future<int> deleteMembers(List<Id> ids) async {
     return executeAndLog<int>(
-      method: () => _isar.writeTxn(() => members.deleteAll(ids)),
+      method: () => _isar.writeTxn(() => collection.deleteAll(ids)),
       logger: log,
       taskDescription: 'Delete members',
       extraMessageBuilder: (count) =>
@@ -81,7 +81,7 @@ class MemberRepository {
   /// Finds a [Member] entity by its ID.
   Future<Member?> findMemberById(Id id) async {
     return executeAndLog<Member?>(
-      method: () => members.get(id),
+      method: () => collection.get(id),
       logger: log,
       taskDescription: 'Find member by ID',
     );
@@ -90,7 +90,7 @@ class MemberRepository {
   /// Retrieves all [Member] entities from the database.
   Future<List<Member>> getAllMembers() async {
     return executeAndLog<List<Member>>(
-      method: () => members.where().findAll(),
+      method: () => collection.where().findAll(),
       logger: log,
       taskDescription: 'Get all members',
       extraMessageBuilder: (members) => 'Retrieved ${members.length} members.',

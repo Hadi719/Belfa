@@ -30,5 +30,5 @@ class Installment {
 
   /// The loan to which this installment belongs.
   @Backlink(to: 'installments')
-  final loan = IsarLink<Loan>();
+  final IsarLink<Loan> loan = IsarLink<Loan>();
 }

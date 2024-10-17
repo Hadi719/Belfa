@@ -22,9 +22,9 @@ class Member {
 
   /// Loans taken by this member.
   @Backlink(to: 'member')
-  final loans = IsarLinks<Loan>();
+  final IsarLinks<Loan> loans = IsarLinks<Loan>();
 
   /// Groups to which this member belongs.
-  @Backlink(to: 'member')
-  final groups = IsarLinks<Group>();
+  @Backlink(to: 'members')
+  final IsarLinks<Group> groups = IsarLinks<Group>();
 }
