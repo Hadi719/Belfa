@@ -10,6 +10,7 @@ class BfSearchWidget extends StatelessWidget {
   const BfSearchWidget({
     super.key,
     required this.controller,
+    required this.searchQuery,
     this.onChanged,
     this.onPressedClear,
   });
@@ -17,6 +18,7 @@ class BfSearchWidget extends StatelessWidget {
   final TextEditingController controller;
   final void Function(String)? onChanged;
   final VoidCallback? onPressedClear;
+  final RxString searchQuery;
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +39,13 @@ class BfSearchWidget extends StatelessWidget {
             vertical: 12.0,
           ),
           // Clear button
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: onPressedClear,
+          suffixIcon: Obx(
+            () => searchQuery.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: onPressedClear,
+                  )
+                : const SizedBox(),
           ),
         ),
       ),
