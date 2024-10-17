@@ -11,28 +11,18 @@ class FirstLaunchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(TranslationKey.appTitle.name.tr),
-        centerTitle: true,
-        elevation: 24,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 64),
-          const BfStepper(),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 64),
-            child: FilledButton.tonal(
-              onPressed: () {
-                // Todo: go to next screen
-                Get.offNamed(AppRoutes.memberOverview);
-              },
-              child: Text(TranslationKey.start.name.tr),
-            ),
-          ),
-        ],
-      ),
-    );
+        appBar: AppBar(
+          title: Text(TranslationKey.appTitle.name.tr),
+          centerTitle: true,
+          elevation: 24,
+        ),
+        body: const BfStepper(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Todo: go to next screen
+            Get.offNamed(AppRoutes.groupOverview);
+          },
+          child: const Icon(Icons.done),
+        ));
   }
 }
