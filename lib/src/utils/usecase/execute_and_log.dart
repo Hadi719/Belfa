@@ -12,7 +12,7 @@ import 'package:logging/logging.dart';
 /// successful. If an exception occurs, the [Future] will resolve with an error
 /// and the exception will be logged.
 Future<T> executeAndLog<T>({
-  required Future<T> Function() method,
+  required dynamic Function() method,
   required Logger logger,
   required String taskDescription,
   String? Function(T result)? extraMessageBuilder,
@@ -20,14 +20,26 @@ Future<T> executeAndLog<T>({
   logger.info('Starting $taskDescription...');
 
   try {
-    final result = await method();
-
-    final extraMessage =
-        extraMessageBuilder != null ? extraMessageBuilder(result) : null;
-    logger.info(
-        'Completed $taskDescription ${extraMessage != null ? ': $extraMessage' : ''}');
-
-    return result;
+    // Check if the method is a Future function
+    if (method is Future<T> Function()) {
+      final result = await method();
+      final extraMessage =
+          extraMessageBuilder != null ? extraMessageBuilder(result) : null;
+      logger.info(
+          'Completed $taskDescription ${extraMessage != null ? ': $extraMessage' : ''}');
+      return result;
+    } else if (method is T Function()) {
+      // If it's a normal function, execute it directly
+      final result = method();
+      final extraMessage =
+          extraMessageBuilder != null ? extraMessageBuilder(result) : null;
+      logger.info(
+          'Completed $taskDescription ${extraMessage != null ? ': $extraMessage' : ''}');
+      return result;
+    } else {
+      throw ArgumentError(
+          'The provided method must be a Future<T> Function() or a T Function().');
+    }
   } catch (e) {
     logger.severe('Error during $taskDescription: $e', [e]);
     rethrow; // Re-throw the exception to be handled by the caller
