@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/db/group.dart';
 import '../../utils/localization/translation/translation_keys.dart';
+import '../../utils/route/app_pages.dart';
 import '../../utils/widget/bf_form_screen.dart';
+import '../member_overview/model/arguments.dart';
 import 'controller.dart';
 
 class GroupFormScreen extends StatelessWidget {
@@ -12,18 +13,13 @@ class GroupFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<GroupFormController>();
-    final Group? group = Get.arguments;
-    final String appBarTitle = group != null
-        ? '${TranslationKey.edit.name.tr} ${TranslationKey.group.name.tr.toLowerCase()}'
-        : '${TranslationKey.add.name.tr} ${TranslationKey.group.name.tr.toLowerCase()}';
-    String hintBankCardNumber =
-        '${TranslationKey.bank.name.tr} ${TranslationKey.card.name.tr} ${TranslationKey.number.name.tr}';
-    String hintBankAccountNumber =
-        '${TranslationKey.bank.name.tr} ${TranslationKey.account.name.tr} ${TranslationKey.number.name.tr}';
+
     return BfFormScreen(
       formKey: controller.formKey,
-      appBarTitle: appBarTitle,
-      bfTextFormFields: <BfTextFormField>[
+      appBarTitle: controller.isEditing
+          ? '${TranslationKey.edit.name.tr} ${TranslationKey.group.name.tr.toLowerCase()}'
+          : '${TranslationKey.add.name.tr} ${TranslationKey.group.name.tr.toLowerCase()}',
+      bfTextFormFields: [
         BfTextFormField(
           controller: controller.nameController,
           labelText: TranslationKey.name.name.tr,
@@ -37,16 +33,46 @@ class GroupFormScreen extends StatelessWidget {
         BfTextFormField(
           controller: controller.bankCardNumberController,
           keyboardType: TextInputType.number,
-          labelText: hintBankCardNumber,
+          labelText:
+              '${TranslationKey.bank.name.tr} ${TranslationKey.card.name.tr} ${TranslationKey.number.name.tr}',
         ),
         BfTextFormField(
           controller: controller.bankAccountNumberController,
           keyboardType: TextInputType.number,
-          labelText: hintBankAccountNumber,
+          labelText:
+              '${TranslationKey.bank.name.tr} ${TranslationKey.account.name.tr} ${TranslationKey.number.name.tr}',
+        ),
+      ],
+      otherWidget: [
+        Row(
+          children: [
+            Text(TranslationKey.members.name.tr),
+            const Text(':'),
+            const SizedBox(width: 8),
+            Obx(() => Text(controller.members.length.toString())),
+            const Spacer(),
+            ElevatedButton(
+              onPressed: () async {
+                final result = await Get.toNamed(
+                  AppRoutes.memberOverview,
+                  arguments: MemberOverviewArguments(
+                    isOnlySelectionMode: true,
+                    membersId: controller.members.map((e) => e.id).toList(),
+                  ),
+                );
+
+                if (result != null) {
+                  controller.addMembers(result.members);
+                }
+              },
+              child: Text(
+                  '${TranslationKey.add.name.tr} ${TranslationKey.member.name.tr.toLowerCase()}'),
+            )
+          ],
         ),
       ],
       bfFormButtons: BfFormButtons(
-        isDeleteButtonVisible: group != null,
+        isDeleteButtonVisible: controller.isEditing,
         confirmDeleteObjectText: TranslationKey.group.name.tr.toLowerCase(),
         onPressedSaved: () async {
           if (controller.formKey.currentState!.validate()) {

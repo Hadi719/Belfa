@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/db/group.dart';
+import '../../models/collections/group.dart';
+import '../../models/collections/member.dart';
 import '../../repositories/group_repository.dart';
 import '../group_overview/controller.dart';
 
@@ -10,25 +11,29 @@ class GroupFormController extends GetxController {
   final nameController = TextEditingController();
   final bankCardNumberController = TextEditingController();
   final bankAccountNumberController = TextEditingController();
+
+  final members = <Member>[].obs;
+  final loanTurns = <LoanTurn>[].obs;
+
   Group? _group;
+  bool get isEditing => _group != null;
 
   final GroupRepository _repository = Get.find<GroupRepository>();
-
-  GroupFormController();
 
   @override
   void onInit() {
     super.onInit();
-    _group = Get.arguments;
+    _group = Get.arguments as Group?;
     _initializeFormFields();
   }
 
   void _initializeFormFields() {
     if (_group != null) {
-      nameController.text = _group?.name ?? '';
-      bankCardNumberController.text = _group?.bankCardNumber?.toString() ?? '';
+      nameController.text = _group!.name;
+      bankCardNumberController.text = _group!.bankCardNumber?.toString() ?? '';
       bankAccountNumberController.text =
-          _group?.bankAccountNumber?.toString() ?? '';
+          _group!.bankAccountNumber?.toString() ?? '';
+      members.addAll(_group!.members);
     }
   }
 
@@ -41,15 +46,16 @@ class GroupFormController extends GetxController {
   }
 
   Future<void> saveGroup() async {
-    _group ??= Group()
+    _group ??= Group();
+
+    _group!
       ..name = nameController.text
       ..bankCardNumber = int.tryParse(bankCardNumberController.text)
-      ..bankAccountNumber = int.tryParse(bankAccountNumberController.text);
+      ..bankAccountNumber = int.tryParse(bankAccountNumberController.text)
+      ..members.addAll(members);
 
-    if (_group != null) {
-      await _repository.insertGroup(_group!);
-      await _updateGroupOverview();
-    }
+    await _repository.insertGroup(_group!);
+    await _updateGroupOverview();
   }
 
   Future<void> deleteGroup() async {
@@ -58,6 +64,10 @@ class GroupFormController extends GetxController {
     }
     await _repository.deleteGroup(_group!.id);
     await _updateGroupOverview();
+  }
+
+  void addMembers(List<Member> selectedMembers) {
+    members.value = selectedMembers;
   }
 
   Future<void> _updateGroupOverview() async {

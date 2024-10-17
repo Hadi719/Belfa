@@ -1,11 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 
-import '../../models/db/group.dart';
-import '../../models/db/loan.dart';
+import '../../models/collections/group.dart';
 import '../../repositories/group_repository.dart';
-import 'model/group_overview_data.dart';
 
 class GroupOverviewController extends GetxController {
   /// Repository for accessing groups data.
@@ -21,8 +18,6 @@ class GroupOverviewController extends GetxController {
   final searchQuery = ''.obs;
 
   final TextEditingController searchController = TextEditingController();
-
-  List<GroupOverviewData> groupOverviewData = [];
 
   @override
   void onInit() {
@@ -69,29 +64,5 @@ class GroupOverviewController extends GetxController {
   Future<void> deleteGroup(Group group) async {
     await _repository.deleteGroup(group.id);
     await loadGroups();
-  }
-
-  Future<void> _loadGroupPerformanceData() async {
-    groupOverviewData = await Future.wait(
-      groups.map((group) async {
-        final activeLoans = await group.loans
-            .filter()
-            .loanStatusEqualTo(LoanStatus.active)
-            .findAll();
-        final averageLoanSize = activeLoans.isNotEmpty
-            ? activeLoans
-                    .map((loan) => loan.principalAmount!)
-                    .reduce((a, b) => a + b) /
-                activeLoans.length
-            : 0.0;
-        return GroupOverviewData(
-          group.name,
-          activeLoans.length,
-          averageLoanSize,
-        );
-      }),
-    );
-
-    update();
   }
 }

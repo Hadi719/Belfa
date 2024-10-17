@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/db/member.dart';
 import '../../utils/localization/translation/translation_keys.dart';
 import '../../utils/widget/bf_form_screen.dart';
 import 'controller.dart';
@@ -12,13 +11,12 @@ class MemberFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MemberFormController>();
-    final Member? member = Get.arguments;
-    final String appBarTitle = member != null
-        ? '${TranslationKey.edit.name.tr} ${TranslationKey.member.name.tr.toLowerCase()}'
-        : '${TranslationKey.add.name.tr} ${TranslationKey.member.name.tr.toLowerCase()}';
+
     return BfFormScreen(
       formKey: controller.formKey,
-      appBarTitle: appBarTitle,
+      appBarTitle: controller.isEditing
+          ? '${TranslationKey.edit.name.tr} ${TranslationKey.member.name.tr.toLowerCase()}'
+          : '${TranslationKey.add.name.tr} ${TranslationKey.member.name.tr.toLowerCase()}',
       bfTextFormFields: <BfTextFormField>[
         BfTextFormField(
           controller: controller.nameController,
@@ -55,7 +53,7 @@ class MemberFormScreen extends StatelessWidget {
         ),
       ],
       bfFormButtons: BfFormButtons(
-        isDeleteButtonVisible: member != null,
+        isDeleteButtonVisible: controller.isEditing,
         confirmDeleteObjectText: TranslationKey.member.name.tr.toLowerCase(),
         onPressedSaved: () async {
           if (controller.formKey.currentState!.validate()) {

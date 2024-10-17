@@ -18,6 +18,7 @@ class GroupOverviewScreen extends GetView<GroupOverviewController> {
         children: [
           BfSearchWidget(
             controller: controller.searchController,
+            searchQuery: controller.searchQuery,
             onChanged: (value) {
               controller.searchQuery.value = value;
             },
@@ -37,7 +38,7 @@ class GroupOverviewScreen extends GetView<GroupOverviewController> {
                   return Card(
                     child: ListTile(
                       title: Text(group.name),
-                      subtitle: Text(group.member.length.toString()),
+                      subtitle: Text(group.members.length.toString()),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () {

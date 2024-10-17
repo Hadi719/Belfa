@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/db/member.dart';
+import '../../models/collections/member.dart';
 import '../../repositories/member_repository.dart';
+import 'model/arguments.dart';
 
 /// Controller for managing the member overview screen.
 class MemberOverviewController extends GetxController {
@@ -13,16 +14,30 @@ class MemberOverviewController extends GetxController {
   final RxList<Member> _allMembers = <Member>[].obs;
 
   /// Observable list of members displayed in the UI, updated based on search.
-  final members = <Member>[].obs;
+  final RxList<Member> members = <Member>[].obs;
+
+  /// Observable list of selected members
+  final RxList<Member> selectedMembers = <Member>[].obs;
+
+  /// Flag to control whether selection mode is active
+  final RxBool isSelectionMode = false.obs;
+
+  /// Flag to control whether is only for selection mode
+  final RxBool isOnlySelectionMode = false.obs;
+
+  /// Flag to control whether all member is selected
+  final RxBool isAllMemberSelected = false.obs;
 
   /// The current search query.
-  final searchQuery = ''.obs;
+  final RxString searchQuery = ''.obs;
 
   final TextEditingController searchController = TextEditingController();
 
   @override
   void onInit() {
     super.onInit();
+
+    getArguments();
 
     loadMembers();
 
@@ -69,5 +84,66 @@ class MemberOverviewController extends GetxController {
   Future<void> deleteMember(Member member) async {
     await _repository.deleteMember(member.id);
     await loadMembers();
+  }
+
+  void toggleMemberSelection(Member member) {
+    if (selectedMembers.contains(member)) {
+      selectedMembers.remove(member);
+    } else {
+      selectedMembers.add(member);
+    }
+  }
+
+  /// Toggles selection mode on long press
+  void onLongPressMember(Member member) {
+    toggleMemberSelection(member);
+    isSelectionMode.value = true;
+    isAllMemberSelected.value = false;
+  }
+
+  /// Selects all members
+  void selectAllMembers() {
+    selectedMembers.value = List.from(members);
+    isAllMemberSelected.value = true;
+  }
+
+  /// Deselects all members
+  void deselectAllMembers() {
+    selectedMembers.clear();
+    isAllMemberSelected.value = false;
+  }
+
+  /// Clears the selection and disables selection mode
+  void disableSelectionMode() {
+    selectedMembers.clear();
+    isSelectionMode.value = false;
+    isAllMemberSelected.value = false;
+  }
+
+  Future<void> deleteSelectedMembers() async {
+    await _repository.deleteMembers(selectedMembers.map((e) => e.id).toList());
+
+    disableSelectionMode();
+  }
+
+  /// Checks if all currently displayed members are selected.
+  bool get areAllMembersSelected {
+    return members.length == selectedMembers.length && members.isNotEmpty;
+  }
+
+  void getArguments() {
+    if (Get.arguments == null || Get.arguments is! MemberOverviewArguments) {
+      return;
+    }
+
+    final MemberOverviewArguments arguments = Get.arguments;
+    isOnlySelectionMode.value = arguments.isOnlySelectionMode;
+    if (arguments.membersId.isNotEmpty) {
+      selectedMembers.value = _allMembers
+          .where((element) => arguments.membersId.contains(element.id))
+          .toList();
+    }
+    isSelectionMode.value = true;
+    isAllMemberSelected.value = areAllMembersSelected;
   }
 }

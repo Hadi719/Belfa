@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/db/member.dart';
+import '../../models/collections/member.dart';
 import '../../repositories/member_repository.dart';
 import '../member_overview/controller.dart';
 
@@ -10,7 +10,9 @@ class MemberFormController extends GetxController {
   final nameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneNumberController = TextEditingController();
+
   Member? _member;
+  bool get isEditing => _member != null;
 
   final MemberRepository _repository = Get.find<MemberRepository>();
 
@@ -19,7 +21,7 @@ class MemberFormController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _member = Get.arguments;
+    _member = Get.arguments as Member?;
     _initializeFormFields();
   }
 
@@ -40,15 +42,15 @@ class MemberFormController extends GetxController {
   }
 
   Future<void> saveMember() async {
-    _member ??= Member()
+    _member ??= Member();
+
+    _member!
       ..name = nameController.text
       ..lastName = lastNameController.text
       ..phoneNumber = phoneNumberController.text;
 
-    if (_member != null) {
-      await _repository.insertMember(_member!);
-      await _updateMemberOverview();
-    }
+    await _repository.insertMember(_member!);
+    await _updateMemberOverview();
   }
 
   Future<void> deleteMember() async {
