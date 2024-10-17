@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
+import '../../../development/src/dev_screen.dart';
 import '../../features/first_launch/index.dart';
 import '../../features/group_form/index.dart';
 import '../../features/group_overview/index.dart';
@@ -13,6 +15,7 @@ class AppRoutes {
   static const String groupForm = '/group-form';
   static const String memberOverview = '/member-overview';
   static const String memberForm = '/member-form';
+  static const String devScreen = '/dev-screen';
 }
 
 class AppPages {
@@ -42,5 +45,10 @@ class AppPages {
       page: () => const MemberFormScreen(),
       binding: MemberFormBinding(),
     ),
+    if (kDebugMode)
+      GetPage(
+        name: AppRoutes.devScreen,
+        page: () => const DevScreen(),
+      ),
   ];
 }
