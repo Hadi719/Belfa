@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../src/belfa_app.dart';
 import '../src/core/dependency_injection.dart';
-import '../src/my_app.dart';
 import '../src/services/services.dart';
 import '../src/utils/app_log_handler.dart';
 
@@ -20,5 +20,5 @@ Future<void> main() async {
   initDependencies();
 
   // Run the application.
-  runApp(const MyApp());
+  runApp(const BelfaApp());
 }

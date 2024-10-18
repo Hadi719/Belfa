@@ -6,8 +6,8 @@ import 'services/user_preferences_service.dart';
 import 'utils/localization/app_translations.dart';
 import 'utils/route/app_pages.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BelfaApp extends StatelessWidget {
+  const BelfaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
