@@ -1,4 +1,6 @@
+import '../../../models/collections/member.dart';
+
 class MemberOverviewResult {
-  const MemberOverviewResult({this.membersId = const <int>[]});
-  final List<int> membersId;
+  const MemberOverviewResult({this.members = const <Member>[]});
+  final List<Member> members;
 }

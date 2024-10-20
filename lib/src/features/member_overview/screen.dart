@@ -8,39 +8,44 @@ import '../../utils/widget/bf_search_widget.dart';
 import 'controller.dart';
 import 'model/result.dart';
 
-class MemberOverviewScreen extends GetView<MemberOverviewController> {
+class MemberOverviewScreen extends StatelessWidget {
   const MemberOverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final MemberOverviewController controller = Get.find();
     return Scaffold(
       appBar: bfAppBar(
         appBarTitle: TranslationKey.members.name.tr,
-        leading: Obx(
-          () => controller.isSelectionMode.value
-              ? IconButton(
-                  onPressed: controller.areAllMembersSelected
-                      ? null
-                      : controller.selectAllMembers,
-                  icon: const Icon(Icons.select_all),
-                )
-              : const SizedBox(),
+        leading: GetX<MemberOverviewController>(
+          builder: (_) => Visibility(
+            visible: controller.isSelectionMode.value,
+            child: IconButton(
+              onPressed: controller.areAllMembersSelected
+                  ? null
+                  : controller.selectAllMembers,
+              icon: const Icon(Icons.select_all),
+            ),
+          ),
         ),
         actions: [
-          Obx(
-            () => controller.isOnlySelectionMode.value
-                ? IconButton(
-                    onPressed: controller.selectedMembers.isEmpty
-                        ? null
-                        : controller.deselectAllMembers,
-                    icon: const Icon(Icons.deselect),
-                  )
-                : controller.isSelectionMode.value
-                    ? IconButton(
-                        onPressed: controller.disableSelectionMode,
-                        icon: const Icon(Icons.clear),
-                      )
-                    : const SizedBox(),
+          GetX<MemberOverviewController>(
+            builder: (_) => Visibility(
+              visible: controller.isOnlySelectionMode.value,
+              replacement: Visibility(
+                visible: controller.isSelectionMode.value,
+                child: IconButton(
+                  onPressed: controller.disableSelectionMode,
+                  icon: const Icon(Icons.clear),
+                ),
+              ),
+              child: IconButton(
+                onPressed: controller.selectedMembers.isEmpty
+                    ? null
+                    : controller.deselectAllMembers,
+                icon: const Icon(Icons.deselect),
+              ),
+            ),
           ),
         ],
       ),
@@ -59,75 +64,87 @@ class MemberOverviewScreen extends GetView<MemberOverviewController> {
               },
             ),
             Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: controller.members.length,
-                  itemBuilder: (context, index) {
-                    final member = controller.members[index];
-                    return Obx(
-                      () => Card(
-                        elevation: 8.0,
-                        child: ListTile(
-                          title: Text(
-                              '${member.name ?? ''} ${member.lastName ?? ''}'),
-                          subtitle: Text(member.phoneNumber ?? ''),
-                          leading: controller.isSelectionMode.value
-                              ? Checkbox(
+              child: GetX<MemberOverviewController>(
+                builder: (_) {
+                  return ListView.builder(
+                    itemCount: controller.displayedMembers.length,
+                    itemBuilder: (context, index) {
+                      final member = controller.displayedMembers[index];
+                      return GetX<MemberOverviewController>(
+                        builder: (_) {
+                          return Card(
+                            elevation: 8.0,
+                            child: ListTile(
+                              title: Text(
+                                  '${member.name ?? ''} ${member.lastName ?? ''}'),
+                              subtitle: Text(member.phoneNumber ?? ''),
+                              leading: Visibility(
+                                visible: controller.isSelectionMode.value,
+                                child: Checkbox(
                                   value: controller.selectedMembers
-                                      .any((e) => e.id == member.id),
+                                      .contains(member),
                                   onChanged: controller.isSelectionMode.value
                                       ? (bool? value) {
                                           controller
                                               .toggleMemberSelection(member);
                                         }
                                       : null,
-                                )
-                              : null,
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              Get.defaultDialog(
-                                title: TranslationKey.delete.name.tr,
-                                titleStyle: Get.textTheme.titleMedium?.copyWith(
-                                  color: Get.theme.colorScheme.error,
                                 ),
-                                content: Wrap(
-                                  spacing: 4.0,
-                                  alignment: WrapAlignment.center,
-                                  children: [
-                                    Text(
-                                        '${TranslationKey.confirm.name.tr} ${TranslationKey.delete.name.tr} '),
-                                    Text(
-                                      '${member.name ?? ''} ${member.lastName ?? ''}',
-                                      style: Get.textTheme.bodyLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Get.theme.colorScheme.scrim,
+                              ),
+                              trailing: Visibility(
+                                visible: controller.isSelectionMode.value,
+                                child: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    Get.defaultDialog(
+                                      title: TranslationKey.delete.name.tr,
+                                      titleStyle:
+                                          Get.textTheme.titleMedium?.copyWith(
+                                        color: Get.theme.colorScheme.error,
                                       ),
-                                    ),
-                                    const Text('?'),
-                                  ],
+                                      content: Wrap(
+                                        spacing: 4.0,
+                                        alignment: WrapAlignment.center,
+                                        children: [
+                                          Text(
+                                              '${TranslationKey.confirm.name.tr} ${TranslationKey.delete.name.tr} '),
+                                          Text(
+                                            '${member.name ?? ''} ${member.lastName ?? ''}',
+                                            style: Get.textTheme.bodyLarge
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  Get.theme.colorScheme.scrim,
+                                            ),
+                                          ),
+                                          const Text('?'),
+                                        ],
+                                      ),
+                                      onConfirm: () async {
+                                        await controller.deleteMember(member);
+                                        Get.back();
+                                      },
+                                      onCancel: () => Get.back(),
+                                    );
+                                  },
                                 ),
-                                onConfirm: () async {
-                                  await controller.deleteMember(member);
-                                  Get.back();
-                                },
-                                onCancel: () => Get.back(),
-                              );
-                            },
-                          ),
-                          onLongPress: () =>
-                              controller.onLongPressMember(member),
-                          onTap: controller.isSelectionMode.value
-                              ? () => controller.toggleMemberSelection(member)
-                              : () => Get.toNamed(
-                                    AppRoutes.memberForm,
-                                    arguments: member,
-                                  ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                              ),
+                              onLongPress: () =>
+                                  controller.onLongPressMember(member),
+                              onTap: controller.isSelectionMode.value
+                                  ? () =>
+                                      controller.toggleMemberSelection(member)
+                                  : () => Get.toNamed(
+                                        AppRoutes.memberForm,
+                                        arguments: member,
+                                      ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ],
@@ -138,14 +155,17 @@ class MemberOverviewScreen extends GetView<MemberOverviewController> {
           if (controller.isOnlySelectionMode.value) {
             Get.back(
                 result: MemberOverviewResult(
-              membersId: controller.selectedMembers.map((e) => e.id).toList(),
+              members: controller.selectedMembers,
             ));
             return;
           }
           Get.toNamed(AppRoutes.memberForm);
         },
-        child:
-            Icon(controller.isOnlySelectionMode.value ? Icons.done : Icons.add),
+        child: GetX<MemberOverviewController>(
+          builder: (_) => Icon(
+            controller.isOnlySelectionMode.value ? Icons.done : Icons.add,
+          ),
+        ),
       ),
     );
   }

@@ -14,7 +14,7 @@ class MemberOverviewController extends GetxController {
   final RxList<Member> _allMembers = <Member>[].obs;
 
   /// Observable list of members displayed in the UI, updated based on search.
-  final RxList<Member> members = <Member>[].obs;
+  final RxList<Member> displayedMembers = <Member>[].obs;
 
   /// Observable list of selected members
   final RxList<Member> selectedMembers = <Member>[].obs;
@@ -33,13 +33,15 @@ class MemberOverviewController extends GetxController {
 
   final TextEditingController searchController = TextEditingController();
 
+  MemberOverviewController();
+
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
 
-    getArguments();
+    await loadMembers();
 
-    loadMembers();
+    getArguments();
 
     // Set up a listener for search query changes to trigger filtering.
     debounce(
@@ -58,13 +60,13 @@ class MemberOverviewController extends GetxController {
   /// Filters the member list based on the current search query.
   void _filterMembers() {
     if (searchQuery.isEmpty) {
-      members.value = _allMembers;
+      displayedMembers.value = _allMembers;
       return;
     }
 
     final query = searchQuery.value.toLowerCase();
 
-    members.value = _allMembers.where((member) {
+    displayedMembers.value = _allMembers.where((member) {
       final name = member.name?.toLowerCase() ?? '';
       final lastName = member.lastName?.toLowerCase() ?? '';
       final phoneNumber = member.phoneNumber ?? '';
@@ -103,7 +105,7 @@ class MemberOverviewController extends GetxController {
 
   /// Selects all members
   void selectAllMembers() {
-    selectedMembers.value = List.from(members);
+    selectedMembers.value = List.from(displayedMembers);
     isAllMemberSelected.value = true;
   }
 
@@ -128,7 +130,8 @@ class MemberOverviewController extends GetxController {
 
   /// Checks if all currently displayed members are selected.
   bool get areAllMembersSelected {
-    return members.length == selectedMembers.length && members.isNotEmpty;
+    return displayedMembers.length == selectedMembers.length &&
+        displayedMembers.isNotEmpty;
   }
 
   void getArguments() {
@@ -139,9 +142,8 @@ class MemberOverviewController extends GetxController {
     final MemberOverviewArguments arguments = Get.arguments;
     isOnlySelectionMode.value = arguments.isOnlySelectionMode;
     if (arguments.membersId.isNotEmpty) {
-      selectedMembers.value = _allMembers
-          .where((element) => arguments.membersId.contains(element.id))
-          .toList();
+      selectedMembers.value =
+          _allMembers.where((e) => arguments.membersId.contains(e.id)).toList();
     }
     isSelectionMode.value = true;
     isAllMemberSelected.value = areAllMembersSelected;

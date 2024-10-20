@@ -5,6 +5,7 @@ import '../../utils/localization/translation/translation_keys.dart';
 import '../../utils/route/app_pages.dart';
 import '../../utils/widget/bf_form_screen.dart';
 import '../member_overview/model/arguments.dart';
+import '../member_overview/model/result.dart';
 import 'controller.dart';
 
 class GroupFormScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class GroupFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<GroupFormController>();
+    final GroupFormController controller = Get.find();
 
     return BfFormScreen(
       formKey: controller.formKey,
@@ -61,7 +62,7 @@ class GroupFormScreen extends StatelessWidget {
                   ),
                 );
 
-                if (result != null) {
+                if (result != null && result is MemberOverviewResult) {
                   controller.addMembers(result.members);
                 }
               },

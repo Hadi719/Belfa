@@ -7,11 +7,12 @@ import '../../utils/widget/bf_app_bar.dart';
 import '../../utils/widget/bf_search_widget.dart';
 import 'controller.dart';
 
-class GroupOverviewScreen extends GetView<GroupOverviewController> {
+class GroupOverviewScreen extends StatelessWidget {
   const GroupOverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final GroupOverviewController controller = Get.find();
     return Scaffold(
       appBar: bfAppBar(appBarTitle: TranslationKey.groups.name.tr),
       body: Column(
@@ -30,11 +31,11 @@ class GroupOverviewScreen extends GetView<GroupOverviewController> {
           ),
           // Group list
           Expanded(
-            child: Obx(
-              () => ListView.builder(
-                itemCount: controller.groups.length,
+            child: GetX<GroupOverviewController>(
+              builder: (_) => ListView.builder(
+                itemCount: controller.displayedGroups.length,
                 itemBuilder: (context, index) {
-                  final group = controller.groups[index];
+                  final group = controller.displayedGroups[index];
                   return Card(
                     child: ListTile(
                       title: Text(group.name),

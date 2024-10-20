@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../models/collections/group.dart';
 import '../../models/collections/member.dart';
 import '../../repositories/group_repository.dart';
-import '../group_overview/controller.dart';
 
 class GroupFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -16,7 +15,7 @@ class GroupFormController extends GetxController {
   final loanTurns = <LoanTurn>[].obs;
 
   Group? _group;
-  bool get isEditing => _group != null;
+  bool isEditing = false;
 
   final GroupRepository _repository = Get.find<GroupRepository>();
 
@@ -24,6 +23,7 @@ class GroupFormController extends GetxController {
   void onInit() {
     super.onInit();
     _group = Get.arguments as Group?;
+    isEditing = _group != null;
     _initializeFormFields();
   }
 
@@ -52,10 +52,9 @@ class GroupFormController extends GetxController {
       ..name = nameController.text
       ..bankCardNumber = int.tryParse(bankCardNumberController.text)
       ..bankAccountNumber = int.tryParse(bankAccountNumberController.text)
-      ..members.addAll(members);
+      ..members.assignAll(members.toList());
 
     await _repository.insertGroup(_group!);
-    await _updateGroupOverview();
   }
 
   Future<void> deleteGroup() async {
@@ -63,16 +62,9 @@ class GroupFormController extends GetxController {
       return;
     }
     await _repository.deleteGroup(_group!.id);
-    await _updateGroupOverview();
   }
 
-  void addMembers(List<Member> selectedMembers) {
-    members.value = selectedMembers;
-  }
-
-  Future<void> _updateGroupOverview() async {
-    if (Get.isRegistered<GroupOverviewController>()) {
-      await Get.find<GroupOverviewController>().loadGroups();
-    }
+  Future<void> addMembers(List<Member> selectedMembers) async {
+    members.assignAll(selectedMembers);
   }
 }
