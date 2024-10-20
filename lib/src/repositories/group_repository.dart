@@ -34,17 +34,26 @@ class GroupRepository {
     return this;
   }
 
-  /// Inserts or updates a [Group] entity.
+  /// Creates or updates a [Group] entity.
   Future<Id> insertGroup(Group group) async {
     return executeAndLog<Id>(
-      method: () => _isar.writeTxnSync(() => collection.putSync(group)),
+      method: () => _isar.writeTxnSync(() {
+        final result = collection.putSync(group);
+        group.members.updateSync(reset: true, link: group.members);
+        group.loans.updateSync(reset: true, link: group.loans);
+        return result;
+      }),
       logger: log,
       taskDescription: 'Insert group',
       extraMessageBuilder: (id) => 'Inserted group with ID: $id.',
     );
   }
 
-  /// Inserts or updates a list of [Group] entities.
+  /// Creates a list of [Group] entities.
+  ///
+  /// use this only for importing new groups, don't use this for updating the
+  /// groups, because the [IsarLinks] may not be updated, for update a [Group]
+  /// use [insertGroup] function.
   Future<List<Id>> insertGroups(List<Group> groups) async {
     return executeAndLog<List<Id>>(
       method: () => _isar.writeTxnSync(() => collection.putAllSync(groups)),
