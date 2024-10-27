@@ -1,15 +1,13 @@
 import 'package:isar/isar.dart';
 
+import 'base/isar_model.dart';
 import 'loan.dart';
 
 part 'installment.g.dart';
 
 /// Represents an installment payment for a loan.
 @collection
-class Installment {
-  /// Unique identifier for the installment.
-  Id id = Isar.autoIncrement;
-
+class Installment extends IsarModel {
   /// Installment number within the loan.
   int? installmentNumber;
 

@@ -2,7 +2,7 @@ import 'translation_keys.dart';
 
 /// [EnglishTranslations] class implements [TranslationKeys] to provide English
 /// translations for all defined keys.
-class EnTranslations extends TranslationProvider {
+class EnTranslations extends BelfaTranslationProvider {
   @override
   String get about => 'About';
   @override

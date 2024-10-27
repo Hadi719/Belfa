@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/route/app_pages.dart';
 import '../../utils/localization/translation/translation_keys.dart';
-import '../../utils/route/app_pages.dart';
-import 'widget/bf_stepper.dart';
+import 'widget/belfa_stepper.dart';
 
 class FirstLaunchScreen extends StatelessWidget {
   const FirstLaunchScreen({super.key});
@@ -16,11 +16,11 @@ class FirstLaunchScreen extends StatelessWidget {
           centerTitle: true,
           elevation: 24,
         ),
-        body: const BfStepper(),
+        body: const BelfaStepper(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Todo: go to next screen
-            Get.offNamed(AppRoutes.groupOverview);
+            Get.offNamed(AppRoutes.home);
           },
           child: const Icon(Icons.done),
         ));

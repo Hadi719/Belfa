@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/route/app_pages.dart';
+import '../../models/isar/member.dart';
 import '../../utils/localization/translation/translation_keys.dart';
-import '../../utils/route/app_pages.dart';
-import '../../utils/widget/bf_form_screen.dart';
-import '../member_overview/model/arguments.dart';
-import '../member_overview/model/result.dart';
+import '../../utils/widget/belfa_form_screen.dart';
+import '../collections/models/arguments.dart';
+import '../collections/models/result.dart';
 import 'controller.dart';
 
 class GroupFormScreen extends StatelessWidget {
@@ -47,23 +48,32 @@ class GroupFormScreen extends StatelessWidget {
       otherWidget: [
         Row(
           children: [
-            Text(TranslationKey.members.name.tr),
+            Text(
+              TranslationKey.members.name.tr,
+              style: Get.textTheme.bodyLarge,
+            ),
             const Text(':'),
             const SizedBox(width: 8),
-            Obx(() => Text(controller.members.length.toString())),
+            Obx(
+              () => Text(controller.members.length.toString(),
+                  style: Get.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  )),
+            ),
             const Spacer(),
             ElevatedButton(
               onPressed: () async {
                 final result = await Get.toNamed(
-                  AppRoutes.memberOverview,
-                  arguments: MemberOverviewArguments(
+                  AppRoutes.membres,
+                  arguments: CollectionsArguments(
                     isOnlySelectionMode: true,
-                    membersId: controller.members.map((e) => e.id).toList(),
+                    preSelectedId: controller.members.map((e) => e.id).toList(),
                   ),
                 );
 
-                if (result != null && result is MemberOverviewResult) {
-                  controller.addMembers(result.members);
+                if (result != null && result is CollectionsResult<Member>) {
+                  controller.addMembers(result.objects);
                 }
               },
               child: Text(

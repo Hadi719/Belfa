@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../localization/translation/translation_keys.dart';
-import 'bf_app_bar.dart';
+import 'belfa_app_bar.dart';
 
-const double _kFormHorizontalPadding = 16.0;
-const double _kFormVerticalPadding = 8.0;
+const double _kFormHorizontalPadding = 8.0;
+const double _kFormVerticalPadding = 16.0;
 const double _kAfterTextFormFieldPadding = 24.0;
 const double _kTextFormFieldBorderRadius = 16.0;
 const double _kTextFormFieldBorderWidth = 3.0;
@@ -32,7 +32,7 @@ class BfFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: bfAppBar(appBarTitle: appBarTitle),
+      appBar: belfaAppBar(appBarTitle: appBarTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
           horizontal: _kFormHorizontalPadding,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/collections/group.dart';
-import '../../models/collections/member.dart';
+import '../../models/isar/group.dart';
+import '../../models/isar/member.dart';
 import '../../repositories/group_repository.dart';
 
 class GroupFormController extends GetxController {
@@ -54,14 +54,14 @@ class GroupFormController extends GetxController {
       ..bankAccountNumber = int.tryParse(bankAccountNumberController.text)
       ..members.assignAll(members.toList());
 
-    await _repository.insertGroup(_group!);
+    await _repository.insertObject(_group!);
   }
 
   Future<void> deleteGroup() async {
     if (_group == null) {
       return;
     }
-    await _repository.deleteGroup(_group!.id);
+    await _repository.deleteObject(_group!.id);
   }
 
   Future<void> addMembers(List<Member> selectedMembers) async {

@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+import 'base/isar_model.dart';
 import 'loan.dart';
 import 'member.dart';
 
@@ -7,10 +8,7 @@ part 'group.g.dart';
 
 /// Represents a group of members in the application.
 @collection
-class Group {
-  /// Unique identifier for the group.
-  Id id = Isar.autoIncrement;
-
+class Group extends IsarModel {
   /// Name of the group.
   late String name;
 

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'translation/en.dart';
 import 'translation/fa.dart';
 
-class AppTraslations extends Translations {
+class BelfaTraslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
         'en': EnTranslations().toMap(),

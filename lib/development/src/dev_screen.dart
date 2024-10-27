@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
-import '../../src/models/collections/group.dart';
-import '../../src/models/collections/member.dart';
-import '../../src/repositories/group_repository.dart';
-import '../../src/repositories/member_repository.dart';
-import '../../src/utils/route/app_pages.dart';
-import '../../src/utils/widget/bf_app_bar.dart';
+import '../../src/core/route/app_pages.dart';
+import '../../src/models/isar/index.dart';
+import '../../src/repositories/index.dart';
+import '../../src/utils/widget/belfa_app_bar.dart';
 
 class DevScreen extends StatelessWidget {
   const DevScreen({super.key});
@@ -17,7 +15,7 @@ class DevScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: bfAppBar(
+      appBar: belfaAppBar(
         appBarTitle: 'Dev Screen',
         actions: [..._routingButtons()],
       ),
@@ -42,13 +40,13 @@ class DevScreen extends StatelessWidget {
               debugPrint('===> DevScreen: is Group null? ${group == null}');
 
               if (member != null && group != null) {
-                await memRepo.insertMember(member);
+                await memRepo.insertObject(member);
 
                 group.members.add(member);
                 debugPrint(
                     '===> DevScreen: is Member added? ${group.members.length}');
 
-                await grpRepo.insertGroup(group);
+                await grpRepo.insertObject(group);
                 group = await grpRepo.collection.get(group.id);
 
                 debugPrint(
@@ -80,9 +78,9 @@ S _getDependency<S>(S dependency) {
 List<Widget> _routingButtons() {
   return [
     Visibility(
-      visible: Get.currentRoute != AppRoutes.memberOverview,
+      visible: Get.currentRoute != AppRoutes.membres,
       child: TextButton(
-        onPressed: () => Get.toNamed(AppRoutes.memberOverview),
+        onPressed: () => Get.toNamed(AppRoutes.membres),
         child: const Text('Mov'),
       ),
     ),
@@ -94,23 +92,23 @@ List<Widget> _routingButtons() {
       ),
     ),
     Visibility(
-      visible: Get.currentRoute != AppRoutes.groupOverview,
+      visible: Get.currentRoute != AppRoutes.groups,
       child: TextButton(
-        onPressed: () => Get.toNamed(AppRoutes.groupOverview),
+        onPressed: () => Get.toNamed(AppRoutes.groups),
         child: const Text('Gov'),
       ),
     ),
     Visibility(
-      visible: Get.currentRoute != AppRoutes.groupForm,
+      visible: Get.currentRoute != AppRoutes.form,
       child: TextButton(
-        onPressed: () => Get.toNamed(AppRoutes.groupForm),
+        onPressed: () => Get.toNamed(AppRoutes.form),
         child: const Text('Gf'),
       ),
     ),
     Visibility(
-      visible: Get.currentRoute != AppRoutes.devScreen,
+      visible: Get.currentRoute != AppRoutes.dev,
       child: TextButton(
-        onPressed: () => Get.toNamed(AppRoutes.devScreen),
+        onPressed: () => Get.toNamed(AppRoutes.dev),
         child: const Text('Dev'),
       ),
     ),

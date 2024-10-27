@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../utils/localization/translation/translation_keys.dart';
-import '../../utils/widget/bf_form_screen.dart';
+import '../../utils/widget/belfa_form_screen.dart';
 import 'controller.dart';
 
 class MemberFormScreen extends StatelessWidget {

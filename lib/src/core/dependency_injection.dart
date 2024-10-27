@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
 
-import '../repositories/group_repository.dart';
-import '../repositories/installment_repository.dart';
-import '../repositories/loan_repository.dart';
-import '../repositories/member_repository.dart';
+import '../repositories/index.dart';
 
 /// Initializes and registers dependencies for the application.
 /// This function ensures that each dependency is registered only once,

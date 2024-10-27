@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
+import 'core/route/app_pages.dart';
 import 'services/user_preferences_service.dart';
-import 'utils/localization/app_translations.dart';
-import 'utils/route/app_pages.dart';
+import 'utils/localization/belfa_translations.dart';
 
 class BelfaApp extends StatelessWidget {
   const BelfaApp({super.key});
@@ -21,7 +21,7 @@ class BelfaApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate
       ],
       fallbackLocale: const Locale('en'),
-      translations: AppTraslations(),
+      translations: BelfaTraslations(),
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: Get.find<UserPreferencesService>().prefersDarkMode.value

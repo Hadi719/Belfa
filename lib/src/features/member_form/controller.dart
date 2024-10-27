@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/collections/member.dart';
+import '../../models/isar/member.dart';
 import '../../repositories/member_repository.dart';
-import '../member_overview/controller.dart';
 
 class MemberFormController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -49,21 +48,13 @@ class MemberFormController extends GetxController {
       ..lastName = lastNameController.text
       ..phoneNumber = phoneNumberController.text;
 
-    await _repository.insertMember(_member!);
-    await _updateMemberOverview();
+    await _repository.insertObject(_member!);
   }
 
   Future<void> deleteMember() async {
     if (_member == null) {
       return;
     }
-    await _repository.deleteMember(_member!.id);
-    await _updateMemberOverview();
-  }
-
-  Future<void> _updateMemberOverview() async {
-    if (Get.isRegistered<MemberOverviewController>()) {
-      await Get.find<MemberOverviewController>().loadMembers();
-    }
+    await _repository.deleteObject(_member!.id);
   }
 }

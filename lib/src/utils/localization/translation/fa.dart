@@ -1,7 +1,7 @@
 import 'translation_keys.dart';
 
 // Persian Translations
-class FaTranslations extends TranslationProvider {
+class FaTranslations extends BelfaTranslationProvider {
   @override
   String get about => 'درباره ما';
   @override

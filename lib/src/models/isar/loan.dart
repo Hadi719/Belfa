@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+import 'base/isar_model.dart';
 import 'group.dart';
 import 'installment.dart';
 import 'member.dart';
@@ -8,10 +9,7 @@ part 'loan.g.dart';
 
 /// Represents a loan taken by a member within a group.
 @collection
-class Loan {
-  /// Unique identifier for the loan.
-  Id id = Isar.autoIncrement;
-
+class Loan extends IsarModel {
   /// The principal amount of the loan.
   double? principalAmount;
 

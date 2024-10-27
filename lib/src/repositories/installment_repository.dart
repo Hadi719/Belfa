@@ -2,31 +2,33 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../models/collections/installment.dart';
+import '../models/isar/installment.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
+import 'base/collection_repository.dart';
 
-Logger log = Logger('repository.installment');
+Logger _log = Logger('repository.installment');
 
 /// Repository for managing [Installment] entities in the Isar database.
-class InstallmentRepository {
+class InstallmentRepository extends CollectionRepository<Installment> {
   /// Isar collection for accessing [Installment] entities.
-  late IsarCollection<Installment> collection;
+  @override
+  IsarCollection<Installment> get collection => _isar.installments;
 
   late Isar _isar;
 
   /// Initializes the repository by obtaining a reference to the [Isar] instance
   /// and the [collection] collection.
   InstallmentRepository init() {
-    log.info('Initializing InstallmentRepository...');
+    _log.info('Initializing InstallmentRepository...');
 
     try {
       _isar = Get.find<IsarService>().isar;
       collection = _isar.installments;
 
-      log.info('InstallmentRepository initialized.');
+      _log.info('InstallmentRepository initialized.');
     } catch (e) {
-      log.severe('Failed to initialize InstallmentRepository: $e', [e]);
+      _log.severe('Failed to initialize InstallmentRepository: $e', [e]);
       rethrow;
     }
 
@@ -34,21 +36,23 @@ class InstallmentRepository {
   }
 
   /// Inserts or updates an [Installment] entity.
-  Future<Id> insertInstallment(Installment installment) async {
+  @override
+  Future<Id> insertObject(Installment installment) async {
     return executeAndLog<Id>(
       method: () => _isar.writeTxnSync(() => collection.putSync(installment)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Insert installment',
       extraMessageBuilder: (id) => 'Inserted installment with ID: $id.',
     );
   }
 
   /// Inserts or updates a list of [Installment] entities.
-  Future<List<Id>> insertInstallments(List<Installment> installments) async {
+  @override
+  Future<List<Id>> insertObjects(List<Installment> installments) async {
     return executeAndLog<List<Id>>(
       method: () =>
           _isar.writeTxnSync(() => collection.putAllSync(installments)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Insert installments',
       extraMessageBuilder: (ids) =>
           'Inserted ${ids.length} out of ${installments.length} installments successfully.',
@@ -56,10 +60,11 @@ class InstallmentRepository {
   }
 
   /// Deletes an [Installment] entity by its ID.
-  Future<bool> deleteInstallment(Id id) async {
+  @override
+  Future<bool> deleteObject(Id id) async {
     return executeAndLog<bool>(
       method: () => _isar.writeTxn(() => collection.delete(id)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Delete installment',
       extraMessageBuilder: (success) => success
           ? 'Installment with ID: $id deleted successfully.'
@@ -68,10 +73,11 @@ class InstallmentRepository {
   }
 
   /// Deletes multiple [Installment] entities by their IDs.
-  Future<int> deleteInstallments(List<Id> ids) async {
-    return executeAndLog<int>(
+  @override
+  Future<Id> deleteObjects(List<Id> ids) async {
+    return executeAndLog<Id>(
       method: () => _isar.writeTxn(() => collection.deleteAll(ids)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Delete installments',
       extraMessageBuilder: (count) =>
           'Deleted $count out of ${ids.length} installments successfully.',
@@ -79,19 +85,21 @@ class InstallmentRepository {
   }
 
   /// Finds an [Installment] entity by its ID.
-  Future<Installment?> findInstallmentById(Id id) async {
+  @override
+  Future<Installment?> findObjectById(Id id) async {
     return executeAndLog<Installment?>(
       method: () => collection.get(id),
-      logger: log,
+      logger: _log,
       taskDescription: 'Find installment by ID',
     );
   }
 
   /// Retrieves all [Installment] entities from the database.
-  Future<List<Installment>> getAllInstallments() async {
+  @override
+  Future<List<Installment>> getAllObjects() async {
     return executeAndLog<List<Installment>>(
       method: () => collection.where().findAll(),
-      logger: log,
+      logger: _log,
       taskDescription: 'Get all installments',
       extraMessageBuilder: (installments) =>
           'Retrieved ${installments.length} installments.',

@@ -2,52 +2,58 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../models/collections/loan.dart';
+import '../models/isar/loan.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
+import 'base/collection_repository.dart';
 
-Logger log = Logger('repository.loan');
+Logger _log = Logger('repository.loan');
 
 /// Repository for managing [Loan] entities in the Isar database.
-class LoanRepository {
+class LoanRepository extends CollectionRepository<Loan> {
   /// Isar collection for accessing [Loan] entities.
-  late IsarCollection<Loan> collection;
+  @override
+  IsarCollection<Loan> get collection => _isar.loans;
 
   late Isar _isar;
 
   /// Initializes the repository by obtaining a reference to the [Isar] instance
   /// and the [collection] collection.
   LoanRepository init() {
-    log.info('Initializing LoanRepository...');
+    _log.info('Initializing LoanRepository...');
 
     try {
       _isar = Get.find<IsarService>().isar;
       collection = _isar.loans;
 
-      log.info('LoanRepository initialized.');
+      _log.info('LoanRepository initialized.');
     } catch (e) {
-      log.severe('Failed to initialize LoanRepository: $e', [e]);
+      _log.severe('Failed to initialize LoanRepository: $e', [e]);
       rethrow;
     }
 
     return this;
   }
 
-  /// Inserts or updates a [Loan] entity.
-  Future<Id> insertLoan(Loan loan) async {
+  /// Creates or updates a [Loan] entity.
+  @override
+  Future<Id> insertObject(Loan loan) async {
     return executeAndLog<Id>(
+      // Todo: check if [IsarLink] updates when a link removed.
+      // if [saveSync] doesn't work, check [reset] first;
       method: () => _isar.writeTxnSync(() => collection.putSync(loan)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Insert loan',
       extraMessageBuilder: (id) => 'Inserted loan with ID: $id.',
     );
   }
 
-  /// Inserts or updates a list of [Loan] entities.
-  Future<List<Id>> insertLoans(List<Loan> loans) async {
+  /// Creates a list of [Loan] entities.
+  @override
+  Future<List<Id>> insertObjects(List<Loan> loans) async {
     return executeAndLog<List<Id>>(
       method: () => _isar.writeTxnSync(() => collection.putAllSync(loans)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Insert loans',
       extraMessageBuilder: (ids) =>
           'Inserted ${ids.length} out of ${loans.length} loans successfully.',
@@ -55,10 +61,11 @@ class LoanRepository {
   }
 
   /// Deletes a [Loan] entity by its ID.
-  Future<bool> deleteLoan(Id id) async {
+  @override
+  Future<bool> deleteObject(Id id) async {
     return executeAndLog<bool>(
       method: () => _isar.writeTxn(() => collection.delete(id)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Delete loan',
       extraMessageBuilder: (success) => success
           ? 'Loan with ID: $id deleted successfully.'
@@ -67,10 +74,11 @@ class LoanRepository {
   }
 
   /// Deletes multiple [Loan] entities by their IDs.
-  Future<int> deleteLoans(List<Id> ids) async {
-    return executeAndLog<int>(
+  @override
+  Future<Id> deleteObjects(List<Id> ids) async {
+    return executeAndLog<Id>(
       method: () => _isar.writeTxn(() => collection.deleteAll(ids)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Delete loans',
       extraMessageBuilder: (count) =>
           'Deleted $count out of ${ids.length} loans successfully.',
@@ -78,19 +86,21 @@ class LoanRepository {
   }
 
   /// Finds a [Loan] entity by its ID.
-  Future<Loan?> findLoanById(Id id) async {
+  @override
+  Future<Loan?> findObjectById(Id id) async {
     return executeAndLog<Loan?>(
       method: () => collection.get(id),
-      logger: log,
+      logger: _log,
       taskDescription: 'Find loan by ID',
     );
   }
 
   /// Retrieves all [Loan] entities from the database.
-  Future<List<Loan>> getAllLoans() async {
+  @override
+  Future<List<Loan>> getAllObjects() async {
     return executeAndLog<List<Loan>>(
       method: () => collection.where().findAll(),
-      logger: log,
+      logger: _log,
       taskDescription: 'Get all loans',
       extraMessageBuilder: (loans) => 'Retrieved ${loans.length} loans.',
     );

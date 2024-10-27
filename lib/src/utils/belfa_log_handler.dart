@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Handles application logging to a file with log rotation.
-class AppLogHandler {
+class BelfaLogHandler {
   // Directory where log files will be stored.
   late final Directory _logDirectory;
   // The current log file.
@@ -19,7 +19,7 @@ class AppLogHandler {
   ///
   /// Gets the application documents directory, creates the log file,
   /// and performs initial log rotation.
-  Future<AppLogHandler> init() async {
+  Future<BelfaLogHandler> init() async {
     _logDirectory = await getApplicationDocumentsDirectory();
     await _rotateLogs();
     return this;

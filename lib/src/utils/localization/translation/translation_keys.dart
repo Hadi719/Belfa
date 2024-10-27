@@ -96,7 +96,7 @@ enum TranslationKey {
 ///       yourNewKey,
 ///     }
 ///     ```
-///   2. Add a corresponding getter to the [TranslationProvider] interface:
+///   2. Add a corresponding getter to the [BelfaTranslationProvider] interface:
 ///     ```dart
 ///     String get yourNewKey;
 ///     ```
@@ -110,7 +110,7 @@ enum TranslationKey {
 ///     }
 ///     ```
 ///   4. Finally, provide the translation for the new key in each language-specific implementation.
-abstract class TranslationProvider {
+abstract class BelfaTranslationProvider {
   String get about;
   String get account;
   String get add;

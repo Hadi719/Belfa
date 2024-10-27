@@ -2,32 +2,32 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
-import '../models/collections/group.dart';
+import '../models/isar/group.dart';
 import '../services/isar_service.dart';
 import '../utils/usecase/execute_and_log.dart';
+import 'base/collection_repository.dart';
 
 /// Logger for the GroupRepository.
-final log = Logger('repository.group');
+final _log = Logger('repository.group');
 
 /// Repository for managing [Group] entities in the Isar database.
-class GroupRepository {
-  /// Isar collection for accessing [Group] entities.
-  late IsarCollection<Group> collection;
-
+class GroupRepository extends CollectionRepository<Group> {
   late Isar _isar;
+
+  @override
+  IsarCollection<Group> get collection => _isar.groups;
 
   /// Initializes the repository by obtaining a reference to the [Isar] instance
   /// and the [collection] collection.
   GroupRepository init() {
-    log.info('Initializing GroupRepository...');
+    _log.info('Initializing GroupRepository...');
 
     try {
       _isar = Get.find<IsarService>().isar;
-      collection = _isar.groups;
 
-      log.info('GroupRepository initialized.');
+      _log.info('GroupRepository initialized.');
     } catch (e) {
-      log.severe('Failed to initialize GroupRepository: $e', [e]);
+      _log.severe('Failed to initialize GroupRepository: $e', [e]);
       rethrow;
     }
 
@@ -35,29 +35,30 @@ class GroupRepository {
   }
 
   /// Creates or updates a [Group] entity.
-  Future<Id> insertGroup(Group group) async {
+  @override
+  Future<Id> insertObject(Group group) async {
     return executeAndLog<Id>(
       method: () => _isar.writeTxnSync(() {
         final result = collection.putSync(group);
-        group.members.updateSync(reset: true, link: group.members);
-        group.loans.updateSync(reset: true, link: group.loans);
+        _updateLinks(group);
         return result;
       }),
-      logger: log,
+      logger: _log,
       taskDescription: 'Insert group',
       extraMessageBuilder: (id) => 'Inserted group with ID: $id.',
     );
   }
 
-  /// Creates a list of [Group] entities.
-  ///
-  /// use this only for importing new groups, don't use this for updating the
-  /// groups, because the [IsarLinks] may not be updated, for update a [Group]
-  /// use [insertGroup] function.
-  Future<List<Id>> insertGroups(List<Group> groups) async {
+  /// Creates or update a list of [Group] entities.
+  @override
+  Future<List<Id>> insertObjects(List<Group> groups) async {
     return executeAndLog<List<Id>>(
-      method: () => _isar.writeTxnSync(() => collection.putAllSync(groups)),
-      logger: log,
+      method: () => _isar.writeTxnSync(() {
+        final result = collection.putAllSync(groups);
+        groups.forEach(_updateLinks);
+        return result;
+      }),
+      logger: _log,
       taskDescription: 'Insert groups',
       extraMessageBuilder: (ids) =>
           'Inserted ${ids.length} out of ${groups.length} groups successfully.',
@@ -65,10 +66,11 @@ class GroupRepository {
   }
 
   /// Deletes a [Group] entity by its ID.
-  Future<bool> deleteGroup(Id id) async {
+  @override
+  Future<bool> deleteObject(Id id) async {
     return executeAndLog<bool>(
       method: () => _isar.writeTxn(() => collection.delete(id)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Delete group',
       extraMessageBuilder: (success) => success
           ? 'Group with ID: $id deleted successfully.'
@@ -77,10 +79,11 @@ class GroupRepository {
   }
 
   /// Deletes multiple [Group] entities by their IDs.
-  Future<int> deleteGroups(List<Id> ids) async {
+  @override
+  Future<Id> deleteObjects(List<Id> ids) async {
     return executeAndLog<int>(
       method: () => _isar.writeTxn(() => collection.deleteAll(ids)),
-      logger: log,
+      logger: _log,
       taskDescription: 'Delete groups',
       extraMessageBuilder: (count) =>
           'Deleted $count out of ${ids.length} groups successfully.',
@@ -88,21 +91,28 @@ class GroupRepository {
   }
 
   /// Finds a [Group] entity by its ID.
-  Future<Group?> findGroupById(Id id) async {
+  @override
+  Future<Group?> findObjectById(Id id) async {
     return executeAndLog<Group?>(
       method: () => collection.get(id),
-      logger: log,
+      logger: _log,
       taskDescription: 'Find group by ID',
     );
   }
 
   /// Retrieves all [Group] entities from the database.
-  Future<List<Group>> getAllGroups() async {
+  @override
+  Future<List<Group>> getAllObjects() async {
     return executeAndLog<List<Group>>(
       method: () => collection.where().findAll(),
-      logger: log,
+      logger: _log,
       taskDescription: 'Get all groups',
       extraMessageBuilder: (groups) => 'Retrieved ${groups.length} groups.',
     );
+  }
+
+  void _updateLinks(Group group) {
+    group.members.updateSync(reset: true, link: group.members);
+    group.loans.updateSync(reset: true, link: group.loans);
   }
 }

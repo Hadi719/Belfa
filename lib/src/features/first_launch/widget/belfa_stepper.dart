@@ -6,8 +6,8 @@ import '../../../utils/localization/translation/fa.dart';
 import '../../../utils/localization/translation/translation_keys.dart';
 import '../controller.dart';
 
-class BfStepper extends StatelessWidget {
-  const BfStepper({super.key});
+class BelfaStepper extends StatelessWidget {
+  const BelfaStepper({super.key});
 
   @override
   Widget build(BuildContext context) {
